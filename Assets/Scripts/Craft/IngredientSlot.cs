@@ -2,16 +2,11 @@ using UnityEngine;
 
 public class IngredientSlot : MonoBehaviour
 {
-    public string ingredientName;
-    private SpriteRenderer sr;
-
-    private void Start()
-    {
-        sr = GetComponent<SpriteRenderer>();
-    }
+    public string flavorId;
+    public string flavorName;
 
     private void OnMouseDown()
     {
-        GameManager.Instance.AddIngredient(ingredientName, sr.color);
+        GameManager.Instance.AddFlavor(flavorId, flavorName);
     }
 }
