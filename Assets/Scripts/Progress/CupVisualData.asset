@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcbc20e9447162f4e802a73150a3d8a8, type: 3}
+  m_Name: CupVisualData
+  m_EditorClassIdentifier: 
+  entries:
+  - size: 0
+    shelfStackSprite: {fileID: -2657983804319211248, guid: 196b604e3dd13dc488d70499c3d4c5eb, type: 3}
+    tableCupSprite: {fileID: -3330371707070652840, guid: 1a1b7b2159527dc4d893173a65a9e453, type: 3}
+  - size: 1
+    shelfStackSprite: {fileID: -7073903225170190136, guid: 51d21275128634941a292a176a55fea3, type: 3}
+    tableCupSprite: {fileID: -8128017496695612029, guid: 6e27945739cb8584a9e7ef1d583ce6e6, type: 3}
+  - size: 2
+    shelfStackSprite: {fileID: -3185432906905415152, guid: 2e62a0a7a35ea314eb188d7eca541ed3, type: 3}
+    tableCupSprite: {fileID: -464706148257763818, guid: 9339bbb9e6c139245b5522036046b478, type: 3}
+  - size: 3
+    shelfStackSprite: {fileID: 6197055894419047045, guid: 6f14a0e76e96a444c898f38d0f717ff0, type: 3}
+    tableCupSprite: {fileID: 5387939257920030921, guid: 38b4de0a58dbc7345afcc2e583dfc5c3, type: 3}
+  - size: 4
+    shelfStackSprite: {fileID: -2246293848221964719, guid: af5d613665598ad44af070f8e41171b5, type: 3}
+    tableCupSprite: {fileID: 2734330585072384893, guid: 92980bfa11a8f224c854a57952fce39d, type: 3}
+  - size: 5
+    shelfStackSprite: {fileID: -2977083730138505764, guid: 2c9b50b3ca9d43f49baff658f6d2b5aa, type: 3}
+    tableCupSprite: {fileID: 6905946704536889469, guid: 323498fb95ba02542a9410d570b8354e, type: 3}
