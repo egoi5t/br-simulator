@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-public class Customermanager : MonoBehaviour
+public class CustomerManager : MonoBehaviour
 {
     [Header("CSV 데이터 (customers.csv / flavors.csv 를 그대로 드래그)")]
     public TextAsset customerCsvFile;
@@ -15,6 +15,9 @@ public class Customermanager : MonoBehaviour
 
     [Header("오늘(Day) 설정")]
     public int currentDay = 1;
+
+    [Header("씬 전환")]
+    public string scoopSceneName = "CraftScene"; 
 
     private List<CustomerOrder> allOrders;
     private Dictionary<string, FlavorData> flavorTable;
@@ -48,7 +51,7 @@ public class Customermanager : MonoBehaviour
             Debug.LogWarning($"Day {currentDay}에 해당하는 손님 데이터가 없습니다.");
     }
 
-    // 다음 손님을 스폰하고 말풍선에 주문 대사를 띄운다.
+    
     public void SpawnNextCustomer()
     {
         if (todayOrders == null || todayIndex >= todayOrders.Count)
@@ -75,6 +78,7 @@ public class Customermanager : MonoBehaviour
 
         view.Setup(currentOrder, flavorTable);
         view.ShowOrderLine();
+        view.SetConfirmAction(OnClickConfirmOrder); // 프리팹 안의 확인 버튼을 이 매니저의 동작과 연결
     }
 
     // '주문 확인' 버튼 등에서 호출: 현재 주문 정보를 다음 씬(아이스크림 담기)으로 넘기고 씬 전환
@@ -91,4 +95,10 @@ public class Customermanager : MonoBehaviour
     }
 
     public CustomerOrder GetCurrentOrder() => currentOrder;
+
+    // '주문 확인' 버튼 OnClick에 파라미터 없이 바로 연결하는 용도
+    public void OnClickConfirmOrder()
+    {
+        ConfirmOrderAndProceed(scoopSceneName);
+    }
 }
