@@ -290,7 +290,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-016
-  flavorName: Pralines-n-Cream
 --- !u!61 &136623502
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -514,7 +513,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-007
-  flavorName: Very-Berry-Strawberry
 --- !u!61 &291256396
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -796,7 +794,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-008
-  flavorName: Rainbow-Sherbet
 --- !u!61 &412604009
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1077,7 +1074,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8b77be3d00861a4b9f7be436b6fd2b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orderContainerIndex: 3
   orderFlavorIds:
   - FLV-001
   - FLV-005
@@ -1166,7 +1162,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-013
-  flavorName: Jamoca-Almond-Fudge
 --- !u!61 &463466634
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1696,7 +1691,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-001
-  flavorName: Mint-Chocolate-Chip
 --- !u!61 &615555960
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1845,7 +1839,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-002
-  flavorName: Puss-in-Boots
 --- !u!61 &678017449
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2069,7 +2062,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-009
-  flavorName: Chocolate-Mousse
 --- !u!61 &785842939
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2218,7 +2210,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-012
-  flavorName: Cotton-Candy-Wonderland
 --- !u!61 &918208164
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2720,7 +2711,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-015
-  flavorName: Pistachio-Almond
 --- !u!61 &1217763160
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2869,7 +2859,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-019
-  flavorName: Chocolate
 --- !u!61 &1239491102
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3018,7 +3007,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-017
-  flavorName: Twinberry-Cheesecake
 --- !u!61 &1258669802
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3167,7 +3155,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-010
-  flavorName: Cookies-n-Cream
 --- !u!61 &1286334007
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3603,7 +3590,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-006
-  flavorName: Cherry-Jubilee
 --- !u!61 &1373766550
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4024,7 +4010,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-011
-  flavorName: Love-Potion-31
 --- !u!61 &1391570950
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4254,7 +4239,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-005
-  flavorName: New-York-Cheesecake
 --- !u!61 &1442614596
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4478,7 +4462,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-018
-  flavorName: Vanilla
 --- !u!61 &1524471495
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4627,7 +4610,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-003
-  flavorName: Shooting-Star
 --- !u!61 &1704634139
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5076,7 +5058,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-004
-  flavorName: Almond-Bon-Bon
 --- !u!61 &1849503612
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5364,7 +5345,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-020
-  flavorName: 31-Yogurt
 --- !u!61 &1881569438
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5785,7 +5765,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flavorId: FLV-014
-  flavorName: Green-Tea
 --- !u!61 &2127059777
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -5,9 +5,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("정답 데이터 (테스트용 고정)")]
-    public int orderContainerIndex = 3; // 1~6 (손님이 요청한 용기)
-    public List<string> orderFlavorIds = new List<string> { "FLV-001", "FLV-005", "FLV-007" }; // 정답 맛 순서
+    [Header("정답 데이터 (테스트용 고정, 화면①에서 못 받으면 이 값 사용)")]
+    public List<string> orderFlavorIds = new List<string> { "FLV-001", "FLV-005", "FLV-007" };
 
     [Header("연결할 오브젝트")]
     public ContainerVisual containerVisual;
@@ -16,12 +15,37 @@ public class GameManager : MonoBehaviour
     private List<string> currentFlavorIds = new List<string>();
     private bool isMenuComplete = false;
 
-    [Header("용기 선택 상태 (화면③에서 전달받음, 지금은 테스트용 직접 세팅)")]
+    [Header("용기 선택 상태 (화면③에서 전달받음, 지금은 테스트용 버튼으로 세팅)")]
     public int selectedContainerIndex = 0; // 0이면 아직 선택 안 됨
 
     [Header("카운터")]
     public int complainCounter = 0;
     public int bossCounter = 0;
+
+    [Header("맛 코드")]
+    private readonly Dictionary<string, string> flavorFileNames = new Dictionary<string, string>
+    {
+        { "FLV-001", "Mint-Chocolate-Chip" },
+        { "FLV-002", "Puss-in-Boots" },
+        { "FLV-003", "Shooting-Star" },
+        { "FLV-004", "Almond-Bon-Bon" },
+        { "FLV-005", "New-York-Cheesecake" },
+        { "FLV-006", "Cherry-Jubilee" },
+        { "FLV-007", "Very-Berry-Strawberry" },
+        { "FLV-008", "Rainbow-Sherbet" },
+        { "FLV-009", "Chocolate-Mousse" },
+        { "FLV-010", "Cookies-n-Cream" },
+        { "FLV-011", "Love-Potion-31" },
+        { "FLV-012", "Cotton-Candy-Wonderland" },
+        { "FLV-013", "Jamoca-Almond-Fudge" },
+        { "FLV-014", "Green-Tea" },
+        { "FLV-015", "Pistachio-Almond" },
+        { "FLV-016", "Pralines-n-Cream" },
+        { "FLV-017", "Twinberry-Cheesecake" },
+        { "FLV-018", "Vanilla" },
+        { "FLV-019", "Chocolate" },
+        { "FLV-020", "31-Yogurt" },
+    };
 
     private void Awake()
     {
@@ -35,9 +59,20 @@ public class GameManager : MonoBehaviour
             orderTimer.StartTimer();
             Debug.Log("주문 처리 시작 — 타이머 가동");
         }
+
+        CustomerOrder order = OrderSession.Instance.CurrentOrder;
+        if (order != null)
+        {
+            orderFlavorIds = order.flavorIds;
+            Debug.Log("주문 접수 — 맛: " + string.Join(", ", orderFlavorIds));
+        }
+        else
+        {
+            Debug.Log("⚠️ OrderSession에 주문 없음");
+        }
     }
 
-    // 화면③에서 넘겨받을 함수 (지금은 테스트용으로 Inspector 값 그대로 사용해도 됨)
+    // 화면③에서 넘겨받을 함수 (지금은 테스트 버튼으로 시뮬레이션)
     public void ReceiveContainer(int containerIndex)
     {
         selectedContainerIndex = containerIndex;
@@ -45,53 +80,47 @@ public class GameManager : MonoBehaviour
         Debug.Log("용기 수신: " + containerIndex + "번");
     }
 
-    public void AddFlavor(string flavorId, string flavorName)
+    public void AddFlavor(string flavorId)
     {
         if (selectedContainerIndex == 0)
         {
-            Debug.Log("⚠️ 용기 정보가 아직 없습니다!");
+            Debug.Log("⚠️ 먼저 용기를 선택해주세요!");
             return;
         }
-
         if (isMenuComplete)
         {
             Debug.Log("이미 완성된 메뉴입니다.");
             return;
         }
-
         if (currentFlavorIds.Count >= selectedContainerIndex)
         {
             Debug.Log("⚠️ 이 용기는 최대 " + selectedContainerIndex + "개까지만 담을 수 있어요!");
             return;
         }
 
+        if (!flavorFileNames.TryGetValue(flavorId, out string fileFormattedName))
+        {
+            Debug.LogError("파일명 매핑이 없는 flavorId: " + flavorId);
+            return;
+        }
+
         currentFlavorIds.Add(flavorId);
-        int slotOrder = currentFlavorIds.Count; // 몇 번째로 담겼는지
-        containerVisual.ApplyFlavor(slotOrder, flavorId, flavorName);
+        int slotOrder = currentFlavorIds.Count;
+        containerVisual.ApplyFlavor(slotOrder, flavorId, fileFormattedName);
 
         Debug.Log("담긴 맛: " + string.Join(", ", currentFlavorIds));
     }
 
     public void TryCompleteMenu()
     {
-        bool containerCorrect = selectedContainerIndex == orderContainerIndex;
         bool tasteCorrect = ScrambledEquals(currentFlavorIds, orderFlavorIds);
         float elapsed = orderTimer.GetElapsedTime();
 
-        if (!containerCorrect || !tasteCorrect)
+        if (!tasteCorrect)
         {
             Debug.Log("현재 경과 시간: " + elapsed.ToString("F1") + "초");
-
-            if (!containerCorrect)
-            {
-                Debug.Log("❌ 메뉴(용기)가 틀렸습니다 → complainCounter++");
-                complainCounter++;
-            }
-            if (!tasteCorrect)
-            {
-                Debug.Log("❌ 맛이 틀렸습니다 → complainCounter++");
-                complainCounter++;
-            }
+            Debug.Log("❌ 맛이 틀렸습니다 → complainCounter++");
+            complainCounter++;
             Debug.Log("⚠️ 다시 담아보세요");
 
             currentFlavorIds.Clear();
