@@ -1,0 +1,21 @@
+flavor_id,flavor_name,category,color_hex,unlock_level
+FLV-001,Mint Chocolate Chip,Mint,#98FF98,3
+FLV-002,Puss in Boots,Chocolate,#D2691E,1
+FLV-003,Shooting Star,Fruit,#000080,4
+FLV-004,Almond Bon Bon,Nut/Caramel,#D2B48C,2
+FLV-005,New York Cheesecake,Vanilla,#FFFDD0,1
+FLV-006,Cherry Jubilee,Fruit,#FF00FF,4
+FLV-007,Very Berry Strawberry,Fruit,#FFB6C1,2
+FLV-008,Rainbow Sherbet,Fruit,#FFD700,3
+FLV-009,Chocolate Mousse,Chocolate,#8B4513,3
+FLV-010,Cookies 'n Cream,Vanilla,#F5F5DC,1
+FLV-011,Love Potion #31,Chocolate,#FF69B4,4
+FLV-012,Cotton Candy Wonderland,Vanilla,#FFC0CB,2
+FLV-013,Jamoca Almond Fudge,Nut/Caramel,#A0522D,4
+FLV-014,Green Tea,Vanilla,#90EE90,1
+FLV-015,Pistachio Almond,Nut/Caramel,#93C572,3
+FLV-016,Pralines 'n Cream,Nut/Caramel,#F5DEB3,2
+FLV-017,Twinberry Cheesecake,Fruit,#DDA0DD,1
+FLV-018,Vanilla,Vanilla,#F3E5AB,3
+FLV-019,Chocolate,Chocolate,#D2691E,2
+FLV-020,31 Yogurt,Vanilla,#FFFFF0,4
