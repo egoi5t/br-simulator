@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro; // TextMeshPro 안 쓰면 이 줄 지우고 Text로 교체
 
 /// <summary>
@@ -37,6 +38,10 @@ public class CupSelectionSceneController : MonoBehaviour
 
     [Header("다음 버튼")]
     public Button nextButton;
+
+    [Header("씬 전환")]
+    [Tooltip("제작(담기) 씬 이름")]
+    public string craftSceneName = "CraftScene";
 
     private GameObject currentCupOnTable;
     private CupSize? selectedCup = null;
@@ -131,10 +136,12 @@ public class CupSelectionSceneController : MonoBehaviour
         if (selectedCup == null) return;
 
         timerRunning = false;
-        Debug.Log($"선택된 컵: {selectedCup} -> 제작 단계로 전환");
+        Debug.Log($"선택된 컵: {selectedCup} -> 제작(담기) 씬으로 전환");
 
-        // TODO: 씬 전환 또는 화면 전환 로직
-        // 예) SceneManager.LoadScene("CupFillingScene");
-        // 또는 다른 팀원의 ②제작·조작 화면으로 전환하는 이벤트 호출
+        // 선택한 컵 크기를 세션에 저장해 CraftScene 으로 넘긴다.
+        OrderSession.Instance.SetSelectedCup(selectedCup.Value);
+
+        // 제작(담기) 씬으로 전환. Order -> CupSelection -> Craft 흐름.
+        SceneManager.LoadScene(craftSceneName);
     }
 }
