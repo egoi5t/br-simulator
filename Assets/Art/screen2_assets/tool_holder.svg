@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 300" width="560" height="300">
+<defs><linearGradient id="bx" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4ec"/><stop offset="1" stop-color="#f6ddd0"/></linearGradient></defs>
+<ellipse cx="280" cy="282" rx="246" ry="22" fill="#c9b8b0" opacity="0.3"/>
+<rect x="24" y="70" width="512" height="208" rx="34" fill="url(#bx)" stroke="#8a655a" stroke-width="8"/>
+<!-- front rim -->
+<rect x="24" y="70" width="512" height="52" rx="26" fill="#ffe6d6" stroke="#8a655a" stroke-width="6"/>
+<!-- two slots -->
+<rect x="70" y="140" width="180" height="120" rx="18" fill="#f0e0d4" stroke="#c9ad9c" stroke-width="4"/>
+<rect x="310" y="140" width="180" height="120" rx="18" fill="#f0e0d4" stroke="#c9ad9c" stroke-width="4"/>
+</svg>
