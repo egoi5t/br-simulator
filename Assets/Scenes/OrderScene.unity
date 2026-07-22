@@ -153,7 +153,7 @@ MonoBehaviour:
   customerPrefab: {fileID: 4057442788253212076, guid: e5f5a16503ff02c4ea3e0ef64eb90ec2, type: 3}
   spawnPoint: {fileID: 1325011793}
   currentDay: 1
-  scoopSceneName: CraftScene
+  cupSelectionSceneName: CupSelectionScene
 --- !u!4 &1162671306
 Transform:
   m_ObjectHideFlags: 0

@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ¾À¿¡ Á÷Á¢ ¹èÄ¡ÇÒ ÇÊ¿ä ¾øÀ½. ¾Æ¹« ½ºÅ©¸³Æ®¿¡¼­³ª OrderSession.Instance ·Î Á¢±ÙÇÏ¸é
-// ÀÚµ¿À¸·Î »ı¼ºµÇ°í ¾ÀÀÌ ¹Ù²î¾îµµ À¯ÁöµÈ´Ù.
+// ì”¬ ì‚¬ì´ì— ì£¼ë¬¸ ì •ë³´ë¥¼ ë„˜ê²¨ì£¼ëŠ” ì‹±ê¸€í„´. ì”¬ì— ë°°ì¹˜í•  í•„ìš” ì—†ì´
+// ì–´ë–¤ ìŠ¤í¬ë¦½íŠ¸ì—ì„œë“  OrderSession.Instance ë¡œ ì ‘ê·¼í•˜ë©´ ìë™ ìƒì„±ë˜ê³ 
+// ì”¬ì´ ë°”ë€Œì–´ë„ ìœ ì§€ëœë‹¤(DontDestroyOnLoad).
 //
-// [ÁÖ¹® ¾À] CustomerManager.ConfirmOrderAndProceed() ¿¡¼­
-//   OrderSession.Instance.SetOrder(currentOrder, flavorTable) È£Ãâ ÈÄ SceneManager.LoadScene(...)
+// [ì£¼ë¬¸ ì”¬] CustomerManager.ConfirmOrderAndProceed() ì—ì„œ
+//   OrderSession.Instance.SetOrder(currentOrder, flavorTable) í˜¸ì¶œ í›„ ì”¬ ì „í™˜
 //
-// [´ã±â ¾À] ´ã´çÀÚ°¡ ´ÙÀ½Ã³·³ ÀĞÀ¸¸é µÊ:
+// [ì œì‘ ì”¬] ì‚¬ìš©ìê°€ ì œì‘ í™”ë©´ì— ë“¤ì–´ì™”ì„ ë•Œ:
 //   CustomerOrder order = OrderSession.Instance.CurrentOrder;
 //   Dictionary<string, FlavorData> flavors = OrderSession.Instance.FlavorTable;
+//   CupSize cup = OrderSession.Instance.SelectedCup;
 public class OrderSession : MonoBehaviour
 {
     private static OrderSession _instance;
@@ -31,9 +33,17 @@ public class OrderSession : MonoBehaviour
     public CustomerOrder CurrentOrder { get; private set; }
     public Dictionary<string, FlavorData> FlavorTable { get; private set; }
 
+    // CupSelection ì”¬ì—ì„œ ì„ íƒí•œ ì»µ í¬ê¸° (CraftScene ì—ì„œ ì½ì–´ ì‚¬ìš©)
+    public CupSize SelectedCup { get; private set; }
+
     public void SetOrder(CustomerOrder order, Dictionary<string, FlavorData> flavorTable)
     {
         CurrentOrder = order;
         FlavorTable = flavorTable;
+    }
+
+    public void SetSelectedCup(CupSize size)
+    {
+        SelectedCup = size;
     }
 }

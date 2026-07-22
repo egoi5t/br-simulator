@@ -17,7 +17,7 @@ public class CustomerManager : MonoBehaviour
     public int currentDay = 1;
 
     [Header("씬 전환")]
-    public string scoopSceneName = "CraftScene"; 
+    public string cupSelectionSceneName = "CupSelectionScene"; 
 
     private List<CustomerOrder> allOrders;
     private Dictionary<string, FlavorData> flavorTable;
@@ -99,6 +99,6 @@ public class CustomerManager : MonoBehaviour
     // '주문 확인' 버튼 OnClick에 파라미터 없이 바로 연결하는 용도
     public void OnClickConfirmOrder()
     {
-        ConfirmOrderAndProceed(scoopSceneName);
+        ConfirmOrderAndProceed(cupSelectionSceneName);
     }
 }
