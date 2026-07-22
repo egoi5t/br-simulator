@@ -15,19 +15,19 @@ MonoBehaviour:
   entries:
   - size: 0
     shelfStackSprite: {fileID: -2657983804319211248, guid: 196b604e3dd13dc488d70499c3d4c5eb, type: 3}
-    tableCupSprite: {fileID: -3330371707070652840, guid: 1a1b7b2159527dc4d893173a65a9e453, type: 3}
+    tableCupSprite: {fileID: 5158901478735289058, guid: 8cb54baf1c12a2b418c8b5fcfdd1b187, type: 3}
   - size: 1
     shelfStackSprite: {fileID: -7073903225170190136, guid: 51d21275128634941a292a176a55fea3, type: 3}
-    tableCupSprite: {fileID: -8128017496695612029, guid: 6e27945739cb8584a9e7ef1d583ce6e6, type: 3}
+    tableCupSprite: {fileID: -806235168742223350, guid: 5b253129875f3054d9f49e6cf0cd4d2e, type: 3}
   - size: 2
     shelfStackSprite: {fileID: -3185432906905415152, guid: 2e62a0a7a35ea314eb188d7eca541ed3, type: 3}
-    tableCupSprite: {fileID: -464706148257763818, guid: 9339bbb9e6c139245b5522036046b478, type: 3}
+    tableCupSprite: {fileID: 21300000, guid: 7612625c02254aebbc0b9954c8346c6a, type: 3}
   - size: 3
     shelfStackSprite: {fileID: 6197055894419047045, guid: 6f14a0e76e96a444c898f38d0f717ff0, type: 3}
-    tableCupSprite: {fileID: 5387939257920030921, guid: 38b4de0a58dbc7345afcc2e583dfc5c3, type: 3}
+    tableCupSprite: {fileID: 21300000, guid: 896bd39bb40f46ba9f48a2cba27dbf43, type: 3}
   - size: 4
     shelfStackSprite: {fileID: -2246293848221964719, guid: af5d613665598ad44af070f8e41171b5, type: 3}
-    tableCupSprite: {fileID: 2734330585072384893, guid: 92980bfa11a8f224c854a57952fce39d, type: 3}
+    tableCupSprite: {fileID: 21300000, guid: 2266c8f5c47e48548db378c30f0f807d, type: 3}
   - size: 5
     shelfStackSprite: {fileID: -2977083730138505764, guid: 2c9b50b3ca9d43f49baff658f6d2b5aa, type: 3}
-    tableCupSprite: {fileID: 6905946704536889469, guid: 323498fb95ba02542a9410d570b8354e, type: 3}
+    tableCupSprite: {fileID: 21300000, guid: e6682203455e4b9086f22a978b8181c7, type: 3}

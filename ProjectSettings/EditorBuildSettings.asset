@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/OrderScene.unity
     guid: d5e646eeba289be41870c779f8079596
   - enabled: 1
+    path: Assets/Scenes/CupSelectionScene.unity
+    guid: 7414e1706190c2846abbff6dd95b79aa
+  - enabled: 1
     path: Assets/Scenes/CraftScene.unity
     guid: f64708295253bc14e8df837e4f76a20d
   m_configObjects:
