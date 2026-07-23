@@ -12,6 +12,7 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        PlayerPrefs.DeleteAll(); //최종 빌드 시 반드시 삭제할것 (환경설정 초기화용)
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
     }
