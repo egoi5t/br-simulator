@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class IngredientSlot : MonoBehaviour
+public class IngredientSlot : MonoBehaviour, IPointerClickHandler
 {
     public string flavorId;
 
-    private void OnMouseDown()
+    public void OnPointerClick(PointerEventData eventData)
     {
         GameManager.Instance.AddFlavor(flavorId);
     }
