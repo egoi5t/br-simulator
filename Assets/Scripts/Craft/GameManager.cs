@@ -113,6 +113,12 @@ public class GameManager : MonoBehaviour
 
     public void TryCompleteMenu()
     {
+        if (ToolManager.Instance.HasToolEquipped())
+        {
+            Debug.Log("⚠️ 도구를 내려놓은 후 완성할 수 있습니다!");
+            return;
+        }
+
         bool tasteCorrect = ScrambledEquals(currentFlavorIds, orderFlavorIds);
         float elapsed = orderTimer.GetElapsedTime();
 
