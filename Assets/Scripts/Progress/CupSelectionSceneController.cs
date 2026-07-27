@@ -31,24 +31,22 @@ public class CupSelectionSceneController : MonoBehaviour
     public float dropAnimDuration = 0.3f;
 
     [Header("타이머")]
-    public float timeLimit = 45f;
+    [Tooltip("이 씬이 주문의 시작점이면 체크 (화면① 역할을 겸하는 테스트 씬일 때). 실제 통합 시엔 화면①에서 이미 시작했을 것이므로 체크 해제")]
+    public bool startTimerHere = true;
     public TMP_Text timerText;
-    private float remainingTime;
     private bool timerRunning = true;
 
     [Header("다음 버튼")]
     public Button nextButton;
-
-    [Header("씬 전환")]
-    [Tooltip("제작(담기) 씬 이름")]
-    public string craftSceneName = "CraftScene";
 
     private GameObject currentCupOnTable;
     private CupSize? selectedCup = null;
 
     private void Start()
     {
-        remainingTime = timeLimit;
+        if (startTimerHere)
+            GameSessionData.StartOrderTimer(45f);
+
         nextButton.interactable = false;
         nextButton.onClick.AddListener(OnNextButtonPressed);
         UpdateTimerDisplay();
@@ -58,10 +56,8 @@ public class CupSelectionSceneController : MonoBehaviour
     {
         if (!timerRunning) return;
 
-        remainingTime -= Time.deltaTime;
-        if (remainingTime <= 0f)
+        if (GameSessionData.IsTimeUp())
         {
-            remainingTime = 0f;
             timerRunning = false;
             OnTimeUp();
         }
@@ -71,7 +67,7 @@ public class CupSelectionSceneController : MonoBehaviour
 
     private void UpdateTimerDisplay()
     {
-        int seconds = Mathf.CeilToInt(remainingTime);
+        int seconds = Mathf.CeilToInt(GameSessionData.GetRemainingTime());
         int m = seconds / 60;
         int s = seconds % 60;
         timerText.text = $"{m}:{s:00}";
@@ -89,12 +85,15 @@ public class CupSelectionSceneController : MonoBehaviour
         currentCupOnTable.transform.localPosition = Vector3.zero;
 
         // 사이즈에 맞는 스프라이트를 데이터에서 찾아서 적용
+        // GetComponentInChildren을 써서 Image가 루트든 자식이든 상관없이 찾음
         var entry = visualData != null ? visualData.GetEntry(size) : null;
         if (entry != null && entry.tableCupSprite != null)
         {
-            var image = currentCupOnTable.GetComponent<Image>();
+            var image = currentCupOnTable.GetComponentInChildren<Image>();
             if (image != null)
                 image.sprite = entry.tableCupSprite;
+            else
+                Debug.LogWarning("TableCup 프리팹에서 Image 컴포넌트를 찾지 못했습니다.");
         }
 
         StartCoroutine(DropAnimation(currentCupOnTable.GetComponent<RectTransform>()));
@@ -131,17 +130,21 @@ public class CupSelectionSceneController : MonoBehaviour
         }
     }
 
+    [Header("씬 전환")]
+    [Tooltip("Build Settings에 등록된 제작 씬 이름과 정확히 일치해야 함")]
+    public string craftSceneName = "CraftScene";
+
     private void OnNextButtonPressed()
     {
         if (selectedCup == null) return;
 
         timerRunning = false;
-        Debug.Log($"선택된 컵: {selectedCup} -> 제작(담기) 씬으로 전환");
 
-        // 선택한 컵 크기를 세션에 저장해 CraftScene 으로 넘긴다.
-        OrderSession.Instance.SetSelectedCup(selectedCup.Value);
+        // 선택한 컵 정보를 다음 씬에서도 쓸 수 있게 저장
+        GameSessionData.SelectedCupSize = selectedCup;
 
-        // 제작(담기) 씬으로 전환. Order -> CupSelection -> Craft 흐름.
+        Debug.Log($"선택된 컵: {selectedCup} -> {craftSceneName}로 전환");
+
         SceneManager.LoadScene(craftSceneName);
     }
 }
