@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3f595c26c0a64a347bc88dfd89d457b1
+guid: 0fa63c5b82233784b948e85ecd4a3c47
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -191312797822116872
-    second: pos2_FLV-012_Cotton-Candy-Wonderland_0
+      213: -3631402509243044332
+    second: tool_spade_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -24,7 +24,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pos2_FLV-012_Cotton-Candy-Wonderland_0
+      name: tool_spade_0
       rect:
         serializedVersion: 2
-        x: 313
-        y: 345
-        width: 246
-        height: 248
+        x: 227
+        y: 23
+        width: 354
+        height: 703
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8fb93d42602585df0800000000000000
-      internalID: -191312797822116872
+      spriteID: 41e2b1868aaaa9dc0800000000000000
+      internalID: -3631402509243044332
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      pos2_FLV-012_Cotton-Candy-Wonderland_0: -191312797822116872
+      tool_spade_0: -3631402509243044332
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

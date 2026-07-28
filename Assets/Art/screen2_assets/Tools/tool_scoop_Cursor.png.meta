@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 930863fce6adc7d4ab105b63d023a006
+guid: c953673cfb9e4b4449defbd98e0a36eb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3631402509243044332
-    second: tool_spade_0
+      213: 5853118400929237723
+    second: tool_scoop_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -24,7 +24,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -55,9 +55,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 8
+  textureType: 0
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -74,7 +74,7 @@ TextureImporter:
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
+    textureFormat: 4
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tool_spade_0
+      name: tool_scoop_0
       rect:
         serializedVersion: 2
-        x: 227
-        y: 23
-        width: 354
-        height: 703
+        x: 167
+        y: 31
+        width: 506
+        height: 650
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 41e2b1868aaaa9dc0800000000000000
-      internalID: -3631402509243044332
+      spriteID: bda80bbac247a3150800000000000000
+      internalID: 5853118400929237723
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      tool_spade_0: -3631402509243044332
+      tool_scoop_0: 5853118400929237723
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
