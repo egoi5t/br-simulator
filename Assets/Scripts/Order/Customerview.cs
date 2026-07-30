@@ -14,6 +14,9 @@ using UnityEngine.Events;
 //               └ OrderText (TMP_Text)
 public class CustomerView : MonoBehaviour
 {
+    [Header("외형")]
+    public SpriteRenderer bodyRenderer; // 손님 캐릭터 스프라이트가 그려지는 SpriteRenderer
+
     [Header("말풍선 UI")]
     public GameObject speechBubble;   // 말풍선 배경 오브젝트 (평소엔 꺼둠)
     public TMP_Text orderText;        // 말풍선 안에 들어갈 텍스트
@@ -29,10 +32,13 @@ public class CustomerView : MonoBehaviour
     private Dictionary<string, FlavorData> flavorTable;
     private Coroutine typingRoutine;
 
-    public void Setup(CustomerOrder order, Dictionary<string, FlavorData> flavorTable)
+    public void Setup(CustomerOrder order, Dictionary<string, FlavorData> flavorTable, Sprite sprite = null)
     {
         this.order = order;
         this.flavorTable = flavorTable;
+
+        if (sprite != null && bodyRenderer != null)
+            bodyRenderer.sprite = sprite;
 
         if (speechBubble != null)
             speechBubble.SetActive(false);

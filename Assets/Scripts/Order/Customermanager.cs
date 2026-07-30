@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// 씬에 빈 오브젝트를 만들고 이 스크립트를 붙인 뒤,
+// 인스펙터에서 customerCsvFile / flavorCsvFile / customerPrefab / spawnPoint 를 채워주세요.
 public class CustomerManager : MonoBehaviour
 {
     [Header("CSV 데이터 (customers.csv / flavors.csv 를 그대로 드래그)")]
@@ -11,6 +13,7 @@ public class CustomerManager : MonoBehaviour
     [Header("스폰 설정")]
     public GameObject customerPrefab;   // CustomerView가 붙은 프리팹
     public Transform spawnPoint;        // 손님이 나타날 위치
+    public CustomerVisualData visualData; // customer_id별 스프라이트 매핑 에셋
 
     [Header("일자/할당량 설정")]
     public int[] customersPerDay = new int[] { 7, 7, 8, 8 }; // 배열 길이 = 총 일수, 각 값 = 해당 날짜의 손님 수
@@ -61,6 +64,12 @@ public class CustomerManager : MonoBehaviour
     }
 
     private string ArrayToString(int[] arr) => "[" + string.Join(",", arr) + "]";
+
+    private Sprite GetSpriteFor(string customerId)
+    {
+        if (visualData == null) return null;
+        return visualData.GetSprite(customerId);
+    }
 
     // 0번 손님은 고정, 나머지는 랜덤 셔플해서 스폰 순서를 미리 만들어둔다.
     private void BuildSpawnQueue()
@@ -116,7 +125,7 @@ public class CustomerManager : MonoBehaviour
             return;
         }
 
-        view.Setup(currentOrder, flavorTable);
+        view.Setup(currentOrder, flavorTable, GetSpriteFor(currentOrder.customerId));
         view.ShowOrderLine();
         view.SetConfirmAction(OnClickConfirmOrder); // 프리팹 안의 확인 버튼을 이 매니저의 동작과 연결
 

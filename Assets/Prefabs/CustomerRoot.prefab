@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d63cce9e990614c42aee9286ea2cbee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bodyRenderer: {fileID: 4432380759574360112}
   speechBubble: {fileID: 8452099423775892821}
   orderText: {fileID: 4211761842892532099}
   useTypingEffect: 1
