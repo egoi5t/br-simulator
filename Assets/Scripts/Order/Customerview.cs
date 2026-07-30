@@ -6,12 +6,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-
+// 손님 프리팹 루트에 붙이는 스크립트.
+// 프리팹 구조 예시:
+// CustomerRoot (SpriteRenderer + CustomerView)
+//   └ SpeechBubbleCanvas (World Space Canvas)
+//         └ BubbleBackground (Image)
+//               └ OrderText (TMP_Text)
 public class CustomerView : MonoBehaviour
 {
     [Header("말풍선 UI")]
-    public GameObject speechBubble;   
-    public TMP_Text orderText;       
+    public GameObject speechBubble;   // 말풍선 배경 오브젝트 (평소엔 꺼둠)
+    public TMP_Text orderText;        // 말풍선 안에 들어갈 텍스트
 
     [Header("타이핑 효과")]
     public bool useTypingEffect = true;
@@ -33,7 +38,7 @@ public class CustomerView : MonoBehaviour
             speechBubble.SetActive(false);
     }
 
- 
+    // 스폰 직후 주문 대사를 말풍선에 표시
     public void ShowOrderLine()
     {
         ShowLine(order.orderLine);
@@ -41,7 +46,7 @@ public class CustomerView : MonoBehaviour
 
     // 다음 씬에서 결과에 따라 재사용할 수 있도록 함께 준비
     public void ShowSatisfiedLine() => ShowLine(order.satisfiedLine, typing: false);
-    public void ShowUnhappyLine() => ShowLine(order.unhappyLine, typing: false);
+    public void ShowUnsatisfiedLine() => ShowLine(order.unsatisfiedLine, typing: false);
 
     private void ShowLine(string line, bool typing = true)
     {

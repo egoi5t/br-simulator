@@ -2,30 +2,27 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-// ── customer.csv 한 줄 ──
+// ── customers.csv 한 줄 ──
+// 컬럼 순서: customer_id, scoop_count, flavor_ids, order_line, paper, satisfied_line, unsatisfied_line
 [System.Serializable]
 public class CustomerOrder
 {
     public string customerId;
-    public string customerName;
-    public int day;
     public int scoopCount;
-    public string container;
     public List<string> flavorIds = new List<string>();
     public string orderLine;
+    public string paper;            // 주문서(영수증)에 적힐 요약 텍스트. 예: "니코, 민초 쿠앤크"
     public string satisfiedLine;
-    public string unhappyLine;
+    public string unsatisfiedLine;
 }
 
-// ── flavor.csv 한 줄 (맛 사전) ──
+// ── flavors.csv 한 줄 (맛 사전) ──
+// 컬럼 순서: flavor_id, flavor_name
 [System.Serializable]
 public class FlavorData
 {
     public string flavorId;
     public string flavorName;
-    public string category;
-    public string colorHex;
-    public int unlockLevel;
 }
 
 // 순수 파싱 도구 모음 (씬에 붙일 필요 없음, static 으로 호출)
@@ -37,7 +34,7 @@ public static class CsvOrderParser
         var result = new List<CustomerOrder>();
         string[] lines = csvText.Replace("\r", "").Split('\n');
 
-        for (int i = 1; i < lines.Length; i++)
+        for (int i = 1; i < lines.Length; i++) // 0번째는 헤더라 건너뜀
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
 
@@ -46,14 +43,12 @@ public static class CsvOrderParser
             var order = new CustomerOrder
             {
                 customerId = Get(cols, 0),
-                customerName = Get(cols, 1),
-                day = ParseInt(Get(cols, 2)),
-                scoopCount = ParseInt(Get(cols, 3)),
-                container = Get(cols, 4),
-                flavorIds = SplitFlavors(Get(cols, 5)),
-                orderLine = Get(cols, 6),
-                satisfiedLine = Get(cols, 7),
-                unhappyLine = Get(cols, 8),
+                scoopCount = ParseInt(Get(cols, 1)),
+                flavorIds = SplitFlavors(Get(cols, 2)),
+                orderLine = Get(cols, 3),
+                paper = Get(cols, 4),
+                satisfiedLine = Get(cols, 5),
+                unsatisfiedLine = Get(cols, 6),
             };
             result.Add(order);
         }
@@ -66,7 +61,7 @@ public static class CsvOrderParser
         var table = new Dictionary<string, FlavorData>();
         string[] lines = csvText.Replace("\r", "").Split('\n');
 
-        for (int i = 1; i < lines.Length; i++)
+        for (int i = 1; i < lines.Length; i++) // 0번째는 헤더라 건너뜀
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
 
@@ -76,9 +71,6 @@ public static class CsvOrderParser
             {
                 flavorId = Get(cols, 0),
                 flavorName = Get(cols, 1),
-                category = Get(cols, 2),
-                colorHex = Get(cols, 3),
-                unlockLevel = ParseInt(Get(cols, 4)),
             };
             table[f.flavorId] = f;
         }

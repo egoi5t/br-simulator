@@ -322,12 +322,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8a0e4e6a9b3ef41bd2f59d1229af0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customerCsvFile: {fileID: 4900000, guid: 7e8ccbe18622f5e46b063541cb3bcf35, type: 3}
-  flavorCsvFile: {fileID: 4900000, guid: 6e0d9af49a3b31d48923d4d69fa3ff29, type: 3}
+  customerCsvFile: {fileID: 4900000, guid: 08fd85c214d05354ca28bdd42b4a458f, type: 3}
+  flavorCsvFile: {fileID: 4900000, guid: eef2f8ac0ee8add43916cf88bf439d92, type: 3}
   customerPrefab: {fileID: 4057442788253212076, guid: e5f5a16503ff02c4ea3e0ef64eb90ec2, type: 3}
   spawnPoint: {fileID: 1325011793}
-  currentDay: 1
-  cupSelectionSceneName: CupSelectionScene
+  customersPerDay: 07000000070000000800000008000000
+  scoopSceneName: IceCreamScoopScene
 --- !u!4 &1162671306
 Transform:
   m_ObjectHideFlags: 0
