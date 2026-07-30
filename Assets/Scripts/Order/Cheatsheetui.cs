@@ -14,6 +14,9 @@ public class CheatSheetUI : MonoBehaviour
     public TMP_Text paperText;     // paper 텍스트가 표시될 곳
     public Button toggleButton;    // 화면 구석의 "컨닝페이퍼 보기/숨기기" 버튼 (선택)
 
+    [Header("항상 최상단에 그려지도록 강제할 Sort Order")]
+    public int sortOrder = 999;
+
     void Awake()
     {
         // 씬에 중복으로 남아있으면(씬 재진입 등) 기존 걸 유지하고 새로 들어온 건 파괴
@@ -24,6 +27,18 @@ public class CheatSheetUI : MonoBehaviour
         }
         _instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // 새 씬에 있는 다른 Canvas들보다 항상 위에서 그려지고, 클릭도 우선 받도록 고정
+        Canvas canvas = GetComponent<Canvas>();
+        if (canvas != null)
+        {
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = sortOrder;
+        }
+        else
+        {
+            Debug.LogWarning("CheatSheetUI: 같은 오브젝트에 Canvas 컴포넌트가 없습니다. CheatSheetCanvas(캔버스 루트)에 붙여주세요.");
+        }
     }
 
     void OnEnable()
