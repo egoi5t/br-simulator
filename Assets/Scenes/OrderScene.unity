@@ -521,6 +521,7 @@ MonoBehaviour:
   flavorCsvFile: {fileID: 4900000, guid: eef2f8ac0ee8add43916cf88bf439d92, type: 3}
   customerPrefab: {fileID: 4057442788253212076, guid: e5f5a16503ff02c4ea3e0ef64eb90ec2, type: 3}
   spawnPoint: {fileID: 1325011793}
+  visualData: {fileID: 11400000, guid: 6989b73e06bee7b46ab2117d2f52cd52, type: 2}
   customersPerDay: 07000000070000000800000008000000
   scoopSceneName: CupSelectionScene
 --- !u!4 &1162671306
