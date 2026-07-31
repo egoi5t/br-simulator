@@ -14,62 +14,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entries:
   - customerId: CUST-001
-    customerSprite: {fileID: 8513148579219696475, guid: 7c1b716f8821ae344b98b17bd641e7a6, type: 3}
+    customerSprite: {fileID: -1612208045153960112, guid: b7592b9c7c171974b9a31423b4f596f8, type: 3}
   - customerId: CUST-002
-    customerSprite: {fileID: 190821569680919476, guid: da8441bdbb4adcd43a86f7c9bf3bb853, type: 3}
+    customerSprite: {fileID: -1634859391426124330, guid: 920089cbfe9697543b1c54acec63fe23, type: 3}
   - customerId: CUST-003
-    customerSprite: {fileID: -8052074105904128344, guid: 922982bfbf433eb43bd2b7a16a4c4ab3, type: 3}
+    customerSprite: {fileID: 1823443461534246379, guid: 8d83db5e2d1102e49a2bc47ec1b9b3c9, type: 3}
   - customerId: CUST-004
-    customerSprite: {fileID: 882587639682797755, guid: c730e04870fcb4e4394cd1fe288149a5, type: 3}
+    customerSprite: {fileID: 3834951046581480059, guid: b9ec0fe4e31d5214a8a72614ce0f9812, type: 3}
   - customerId: CUST-005
-    customerSprite: {fileID: -5687250381555325382, guid: 0d5f3ae7cf94e2945b7449ae90d6ede8, type: 3}
+    customerSprite: {fileID: 4549348545296662299, guid: 3b7ef73583acdb440aa99cc4b6159735, type: 3}
   - customerId: CUST-006
-    customerSprite: {fileID: -6511010830209952090, guid: 56fc7efcd31c4fc4bb446839b2e54534, type: 3}
+    customerSprite: {fileID: -275516967182845120, guid: 2b92146c2ac4fa44a84161c7eef3732e, type: 3}
   - customerId: CUST-007
-    customerSprite: {fileID: -7836133908286311504, guid: a3d33da09b244044b8a7ec6901a61e39, type: 3}
+    customerSprite: {fileID: 4195516742729436724, guid: 147882b2243b43a47baec6fb08eb38df, type: 3}
   - customerId: CUST-008
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: -5527068842893794433, guid: 3f98f6cb2ed4a0c479cd52fdba3275d7, type: 3}
   - customerId: CUST-009
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 6537561088740039179, guid: 113b7c0486265874cbf94dc325556002, type: 3}
   - customerId: CUST-010
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: -6732819618498689776, guid: 4aa15f4849b4412428488d1d5f8a712c, type: 3}
   - customerId: CUST-011
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: -6087623976150397428, guid: fb53f610086480848a8e53912d2864c9, type: 3}
   - customerId: CUST-012
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: -1982814921913334832, guid: d7dd0930ec7bfef4e8cf026e08ab499f, type: 3}
   - customerId: CUST-013
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 7592919984230045688, guid: b2fa25679431b3f41ae9905432aa6161, type: 3}
   - customerId: CUST-014
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 4289302588420663306, guid: dd897a1ea55174945a29690ddc9f6550, type: 3}
   - customerId: CUST-015
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 2109582056351255591, guid: 9405e07c56706af4f872a7fb73e72b21, type: 3}
   - customerId: CUST-016
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 1994967783031416213, guid: 1ae54ed707b188c48a66e0810e32887e, type: 3}
   - customerId: CUST-017
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 3529834675228340316, guid: 162521d870c2fd84c8372ff18b1e512c, type: 3}
   - customerId: CUST-018
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 4392799052586956995, guid: 34e30046116911148ae9aebd129e8edc, type: 3}
   - customerId: CUST-019
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: -7769103369649047278, guid: 97c28ce33d390a34aa52aa6374f6ba9a, type: 3}
   - customerId: CUST-020
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 1310795136593545411, guid: 5fb5005bcd5140741a6048c40bdd4704, type: 3}
   - customerId: CUST-021
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: -6422398641958743004, guid: 3be70b45868a05749a5219cabd42ec91, type: 3}
   - customerId: CUST-022
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 8496618795619488657, guid: 647840fe725f99f40a7eef80ebf573b2, type: 3}
   - customerId: CUST-023
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 1014952662226022285, guid: 74de3d50f71c7c0498625ce9c0250c01, type: 3}
   - customerId: CUST-024
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 810460010569883552, guid: 8f52f17b8fb82884e975b94c07f83113, type: 3}
   - customerId: CUST-025
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: -7446914665170866832, guid: 393174a03fb303e40a1f2a12cf4f9b07, type: 3}
   - customerId: CUST-026
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 2289724190943035605, guid: c254881f95a3cdb468c795a5381ad04b, type: 3}
   - customerId: CUST-027
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: -4240646493264718443, guid: 6844cf9a34b889a4993fcb428cc6ccf0, type: 3}
   - customerId: CUST-028
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: -8245937107642180895, guid: e7472d6107dacf8499c1397d77c7bdfe, type: 3}
   - customerId: CUST-029
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 7887308231382180244, guid: cd9bad770b41a6540afddbafce927fd2, type: 3}
   - customerId: CUST-030
-    customerSprite: {fileID: 0}
+    customerSprite: {fileID: 7664781940128213399, guid: d384d54eabc004145856672e00744f88, type: 3}
