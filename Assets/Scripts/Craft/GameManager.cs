@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
@@ -15,14 +16,14 @@ public class GameManager : MonoBehaviour
     private List<string> currentFlavorIds = new List<string>();
     private bool isMenuComplete = false;
 
-    [Header("용기 선택 상태 (화면③에서 전달받음, 지금은 테스트용 버튼으로 세팅)")]
+    [Header("용기 선택 상태 (1~6, 화면③에서 전달받음)")]
     public int selectedContainerIndex = 0; // 0이면 아직 선택 안 됨
 
     [Header("카운터")]
     public int complainCounter = 0;
     public int bossCounter = 0;
 
-    [Header("맛 코드")]
+    [Header("맛 코드 → 파일명 매핑 (실제 이미지 파일명 기준, 검증 완료)")]
     private readonly Dictionary<string, string> flavorFileNames = new Dictionary<string, string>
     {
         { "FLV-001", "Mint-Chocolate-Chip" },
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("주문 처리 시작 — 타이머 가동");
         }
 
+        // 화면①에서 온 주문(맛) 데이터
         CustomerOrder order = OrderSession.Instance.CurrentOrder;
         if (order != null)
         {
@@ -68,11 +70,24 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("⚠️ OrderSession에 주문 없음");
+            Debug.Log("⚠️ OrderSession에 주문 없음 — Inspector 고정값(orderFlavorIds)으로 테스트 진행");
+        }
+
+        // 화면③에서 온 용기 데이터
+        CupSize? cup = OrderSession.Instance.SelectedCup;
+        if (cup.HasValue)
+        {
+            // CupSize는 0(Ikko)~5(Rokko), 우리 시스템은 1~6이므로 +1
+            int containerIndex = (int)cup.Value + 1;
+            ReceiveContainer(containerIndex);
+        }
+        else
+        {
+            Debug.Log("⚠️ OrderSession에 용기 정보 없음 — 테스트 버튼으로 직접 선택 필요");
         }
     }
 
-    // 화면③에서 넘겨받을 함수 (지금은 테스트 버튼으로 시뮬레이션)
+    // 화면③에서 넘어온 용기 정보 적용
     public void ReceiveContainer(int containerIndex)
     {
         selectedContainerIndex = containerIndex;
@@ -80,21 +95,33 @@ public class GameManager : MonoBehaviour
         Debug.Log("용기 수신: " + containerIndex + "번");
     }
 
-    public void AddFlavor(string flavorId)
+    public void AddFlavor(string flavorId, RectTransform sourceRect)
     {
-        if (selectedContainerIndex == 0)
+        if (!ToolManager.Instance.HasToolEquipped())
         {
-            Debug.Log("⚠️ 먼저 용기를 선택해주세요!");
+            Debug.Log("⚠️ 먼저 도구를 선택해주세요!");
+            FeedbackManager.Instance.PlayErrorFeedbackAtMouse();   
             return;
         }
+
+        if (!IsCorrectToolForContainer())
+        {
+            Debug.Log("⚠️ 이 용기에는 다른 도구를 사용해야 합니다!");
+            FeedbackManager.Instance.PlayErrorFeedbackAtMouse();   
+            return;
+        }
+
         if (isMenuComplete)
         {
             Debug.Log("이미 완성된 메뉴입니다.");
+            FeedbackManager.Instance.PlayErrorFeedbackAtMouse();  
             return;
         }
+
         if (currentFlavorIds.Count >= selectedContainerIndex)
         {
             Debug.Log("⚠️ 이 용기는 최대 " + selectedContainerIndex + "개까지만 담을 수 있어요!");
+            FeedbackManager.Instance.PlayErrorFeedbackAtMouse();   
             return;
         }
 
@@ -111,11 +138,28 @@ public class GameManager : MonoBehaviour
         Debug.Log("담긴 맛: " + string.Join(", ", currentFlavorIds));
     }
 
+    // 현재 용기(1~6)에 맞는 도구를 들고 있는지 확인
+    private bool IsCorrectToolForContainer()
+    {
+        bool needsScoop = selectedContainerIndex <= 2; // 1,2번은 스쿱
+        int currentTool = ToolManager.Instance.currentTool; // 1=Scoop, 2=Spade
+
+        if (needsScoop)
+        {
+            return currentTool == 1; // Scoop
+        }
+        else
+        {
+            return currentTool == 2; // Spade
+        }
+    }
+
     public void TryCompleteMenu()
     {
         if (ToolManager.Instance.HasToolEquipped())
         {
             Debug.Log("⚠️ 도구를 내려놓은 후 완성할 수 있습니다!");
+            FeedbackManager.Instance.PlayErrorFeedbackAtMouse();
             return;
         }
 
@@ -127,11 +171,6 @@ public class GameManager : MonoBehaviour
             Debug.Log("현재 경과 시간: " + elapsed.ToString("F1") + "초");
             Debug.Log("❌ 맛이 틀렸습니다 → complainCounter++");
             complainCounter++;
-            Debug.Log("⚠️ 다시 담아보세요");
-
-            currentFlavorIds.Clear();
-            containerVisual.ResetVisual();
-            return;
         }
 
         isMenuComplete = true;
@@ -157,7 +196,12 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("현재 누적 complainCounter: " + complainCounter + " / bossCounter: " + bossCounter);
 
-        Invoke(nameof(ResetOrder), 2f);
+        // 완성 결과를 화면3 으로 넘기기 위해 저장
+        CraftResultSession.Instance.SetResult(selectedContainerIndex, currentFlavorIds);
+
+        OrderSession.Instance.CompleteOrder();
+
+        Invoke(nameof(GoToCupSelection), 0.1f);
     }
 
     private bool ScrambledEquals(List<string> a, List<string> b)
@@ -174,11 +218,8 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    public void ResetOrder()
+    private void GoToCupSelection()
     {
-        currentFlavorIds.Clear();
-        isMenuComplete = false;
-        selectedContainerIndex = 0;
-        containerVisual.ResetVisual();
+        SceneManager.LoadScene("CupSelectionScene");
     }
 }
