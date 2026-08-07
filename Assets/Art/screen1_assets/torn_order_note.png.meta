@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 448b92c55282b8946b35db0d3918abe8
+guid: 8bbc849f7ed2e764cbc4dd0befe9a180
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -103,10 +103,10 @@ TextureImporter:
       name: torn_order_note_0
       rect:
         serializedVersion: 2
-        x: 48
-        y: 247
-        width: 839
-        height: 479
+        x: 49
+        y: 328
+        width: 318
+        height: 396
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
