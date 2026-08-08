@@ -27,12 +27,17 @@ public class CustomerManager : MonoBehaviour
     [Header("씬 전환")]
     public string cupSelectionSceneName = "CupSelectionScene"; // 주문 확인 버튼 누르면 이동
 
+    [Header("배달용 쇼핑백 (드래그 아이템)")]
+    public GameObject iceCreamBagPrefab; // DeliveryBagItem이 붙은 프리팹, 스프라이트는 쇼핑백 하나로 고정
+    public RectTransform iceCreamSpawnPoint; // 완성된 아이스크림이 처음 놓일 자리 (예: 카운터 위)
+
     [Header("배달 후 다음 손님으로 넘어가기 전 대기 시간(초)")]
     public float resultDisplayDuration = 1.5f;
 
     private Dictionary<string, FlavorData> flavorTable;
     private GameObject currentCustomerObj;
     private CustomerView currentView;
+    private GameObject currentIceCreamBag;
 
     void Start()
     {
@@ -122,6 +127,27 @@ public class CustomerManager : MonoBehaviour
         CustomerOrder order = OrderSession.Instance.CurrentOrder;
         SpawnCustomerObject(order);
         currentView.HideBubbleAndButton(); // 말풍선/확인 버튼 확실히 숨김 - 배달(전달) 동작만 기다리는 상태
+        currentView.SetDeliveryAction(DeliverToCustomer); // 손님 위 드롭존에 배달 콜백 연결
+
+        SpawnDeliverableIceCream();
+    }
+
+    // 완성된 아이스크림(쇼핑백)을 카운터 위치에 드래그 가능한 상태로 스폰
+    private void SpawnDeliverableIceCream()
+    {
+        if (iceCreamBagPrefab == null || iceCreamSpawnPoint == null)
+        {
+            Debug.LogWarning("CustomerManager: iceCreamBagPrefab 또는 iceCreamSpawnPoint가 연결되지 않았습니다.");
+            return;
+        }
+
+        if (currentIceCreamBag != null)
+            Destroy(currentIceCreamBag);
+
+        currentIceCreamBag = Instantiate(iceCreamBagPrefab, iceCreamSpawnPoint);
+        var rect = currentIceCreamBag.GetComponent<RectTransform>();
+        if (rect != null)
+            rect.anchoredPosition = Vector2.zero;
     }
 
     private void SpawnCustomerObject(CustomerOrder order)
@@ -218,6 +244,7 @@ public class CustomerManager : MonoBehaviour
 
         yield return new WaitForSeconds(resultDisplayDuration);
 
+        currentIceCreamBag = null; // DeliveryBagItem이 스스로 Destroy됐으므로 참조만 정리
         session.LastOrderOutcome = null;
         session.CompleteOrder();
 

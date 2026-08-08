@@ -28,6 +28,9 @@ public class CustomerView : MonoBehaviour
     [Header("주문 확인 버튼 (말풍선 안/옆에 배치)")]
     public Button confirmButton;
 
+    [Header("배달 드롭존 (손님 위에 겹쳐진 투명 UI)")]
+    public CustomerDropZone dropZone;
+
     private CustomerOrder order;
     private Dictionary<string, FlavorData> flavorTable;
     private Coroutine typingRoutine;
@@ -108,6 +111,13 @@ public class CustomerView : MonoBehaviour
 
         confirmButton.onClick.RemoveAllListeners();
         confirmButton.onClick.AddListener(action);
+    }
+
+    // CustomerManager가 "배달 대기" 상태로 재등장시킬 때 호출: 드롭존에 배달 콜백 연결
+    public void SetDeliveryAction(UnityAction action)
+    {
+        if (dropZone != null)
+            dropZone.SetDeliveryCallback(action);
     }
 
     // 담기 씬에서 참고할 수 있도록 맛 ID를 맛 이름으로 변환
