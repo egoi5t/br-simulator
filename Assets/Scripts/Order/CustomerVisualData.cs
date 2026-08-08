@@ -18,6 +18,13 @@ public class CustomerVisualData : ScriptableObject
 
     public Sprite GetSprite(string customerId)
     {
+        if (string.IsNullOrEmpty(customerId))
+        {
+            Debug.LogWarning("CustomerVisualData: customerId가 null이거나 비어있어 스프라이트를 조회할 수 없습니다. " +
+                              "이 손님 데이터가 CSV 파싱이 아닌 다른 경로(더미 주문 등)로 만들어졌는지 확인해보세요.");
+            return null;
+        }
+
         // 처음 조회할 때 한 번만 딕셔너리로 캐싱 (매번 리스트 순회하지 않도록)
         if (_lookup == null)
         {

@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
         // 완성 결과를 화면3 으로 넘기기 위해 저장
         CraftResultSession.Instance.SetResult(selectedContainerIndex, currentFlavorIds);
 
-        OrderSession.Instance.CompleteOrder();
+        //OrderSession.Instance.CompleteOrder();
 
         Invoke(nameof(GoToCupSelection), 0.1f);
     }
