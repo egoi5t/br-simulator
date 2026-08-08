@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48c1c087aa75e1849bb8be2775ee9572, type: 3}
+  m_Name: FlavorVisualData
+  m_EditorClassIdentifier: 
+  entries:
+  - flavorId: FLV-001
+    scoopSprite: {fileID: 21300000, guid: 987d2292045ceb64795f9361eb59ed87, type: 3}
+    discSprite: {fileID: -2425213970874485707, guid: 1d2a2f3189dcaa04189032e430fc3c3f, type: 3}
+  - flavorId: FLV-002
+    scoopSprite: {fileID: 1597294853046142275, guid: 42303438fd96ffc45b1c9cfd2b2a9102, type: 3}
+    discSprite: {fileID: -5699611105220479172, guid: 673e9f31227bde7408135db9e48dc5c2, type: 3}
+  - flavorId: FLV-003
+    scoopSprite: {fileID: -2882291081279080833, guid: 982ee6ba560a754419b4b113d6269c54, type: 3}
+    discSprite: {fileID: -7053078619256104591, guid: b17d8d017f78436458a899c385443069, type: 3}
+  - flavorId: FLV-004
+    scoopSprite: {fileID: 4837849522282234635, guid: 2bd5e56491977de489f80d00f6374d2f, type: 3}
+    discSprite: {fileID: -4492734850227442673, guid: 79b4333f2e62bf74e92f011f69824206, type: 3}
+  - flavorId: FLV-005
+    scoopSprite: {fileID: -4739633051763982760, guid: dd30c0d88b35bc1479607330a026beef, type: 3}
+    discSprite: {fileID: -8639579470701736721, guid: ab187363062bda24ab5c2b3ea93cbbb8, type: 3}
+  - flavorId: FLV-006
+    scoopSprite: {fileID: 8681241836136022250, guid: 104882237361a174886ea3d370c524cb, type: 3}
+    discSprite: {fileID: -7309147436471143088, guid: 2f4e46f27528eaf41b104ee7da0e6d8d, type: 3}
+  - flavorId: FLV-007
+    scoopSprite: {fileID: -6410871503122372682, guid: 666b5a6c75ab7484f89f551068cff378, type: 3}
+    discSprite: {fileID: 5845594273246621111, guid: 990b1cb6d606a9145ad78ae6bd3df0f3, type: 3}
+  - flavorId: FLV-008
+    scoopSprite: {fileID: -8422153597099521682, guid: b6ee793c92d1b3340b4d0d9838c27965, type: 3}
+    discSprite: {fileID: -1505978993330863016, guid: 1ea3d61eff9c8c64fb477c48ab33a7a5, type: 3}
+  - flavorId: FLV-009
+    scoopSprite: {fileID: 1320752901498274172, guid: 23f196e65d8119c4ba1b750eb4bc621e, type: 3}
+    discSprite: {fileID: -8606501105416274331, guid: a903fd62889d2914193f5931e017a8ae, type: 3}
+  - flavorId: FLV-010
+    scoopSprite: {fileID: -8809739650148979588, guid: 3fed3eb4cc4b52c48b3e8e0f03750aad, type: 3}
+    discSprite: {fileID: -7888628723732311580, guid: 60a3d22c07cd55f458029766ff9562e2, type: 3}
+  - flavorId: FLV-011
+    scoopSprite: {fileID: 2327829793594530059, guid: 4559e7696430b4d4cb6c8be31971ad4f, type: 3}
+    discSprite: {fileID: -4604695752214486391, guid: 0eebd81c090274e468f16584cc75f1ac, type: 3}
+  - flavorId: FLV-012
+    scoopSprite: {fileID: -4149116661633452334, guid: 52ebf011c0b831c4bae8e370e04847f6, type: 3}
+    discSprite: {fileID: 8015643933102008273, guid: 2d548fa7223d6b84286c8df8a9464cfc, type: 3}
+  - flavorId: FLV-013
+    scoopSprite: {fileID: 8971286951873929153, guid: 8072ce53f1f4ae74e8e84519a4793f95, type: 3}
+    discSprite: {fileID: -1449382584980430597, guid: 0c255ab2fe7211f48842f440c6feea36, type: 3}
+  - flavorId: FLV-014
+    scoopSprite: {fileID: -1449382584980430597, guid: 0c255ab2fe7211f48842f440c6feea36, type: 3}
+    discSprite: {fileID: -3933013834399913915, guid: 69195ccb59c573542bd646053f0486a8, type: 3}
+  - flavorId: FLV-015
+    scoopSprite: {fileID: 8139827151285919486, guid: d48339005bf46b849bedd632199bc9e0, type: 3}
+    discSprite: {fileID: 7808175741166755504, guid: 48641c19b84bc1344bfa32d8965a098c, type: 3}
+  - flavorId: FLV-016
+    scoopSprite: {fileID: 4211585209464688966, guid: 998d4f9ff8fc23e4794383c99750f97e, type: 3}
+    discSprite: {fileID: 2782966233083835009, guid: 99b58ecbb34be8f498fe7b515641d712, type: 3}
+  - flavorId: FLV-017
+    scoopSprite: {fileID: 6619033982731082014, guid: 90254ef6b668a814da48245ce08b4439, type: 3}
+    discSprite: {fileID: 6014338922856934385, guid: 335cfd183cae80e40bc1810e2616cdc9, type: 3}
+  - flavorId: FLV-018
+    scoopSprite: {fileID: 310117570112024706, guid: 5e22fd0cafb37c849a3901b6eecb19c6, type: 3}
+    discSprite: {fileID: 5824598951710128726, guid: 8b0280c8cdbceb04d9864f13a9f69cda, type: 3}
+  - flavorId: FLV-019
+    scoopSprite: {fileID: 6128898080310622509, guid: 730ef97c3041be64b9557fc7ea687b38, type: 3}
+    discSprite: {fileID: -947066031632203955, guid: 63cb6503be609454cbe6b1aa29a94ce0, type: 3}
+  - flavorId: FLV-020
+    scoopSprite: {fileID: 1942907611774740575, guid: b345518b344ab8b459b0ec010e641748, type: 3}
+    discSprite: {fileID: -1022619949728043363, guid: 722f6c0ac94ecac4cb46d51374878691, type: 3}
