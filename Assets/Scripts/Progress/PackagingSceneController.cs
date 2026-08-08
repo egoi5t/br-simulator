@@ -44,6 +44,13 @@ public class PackagingSceneController : MonoBehaviour
     public float bagFlyDuration = 0.3f;
     [Tooltip("쇼핑백에 담긴 후 보여줄 이미지. 사이즈 상관없이 공용 이미지 하나만 씀")]
     public Sprite baggedSprite;
+    [Tooltip("쇼핑백 무더기 클릭 시, 책상(아이스크림 옆)에 생성될 쇼핑백 프리팹 (Image 컴포넌트 있는 오브젝트)")]
+    public GameObject bagVisualPrefab;
+    [Tooltip("생성된 쇼핑백이 놓일 위치 (책상 위, 보통 아이스크림 옆)")]
+    public RectTransform bagSpawnPoint;
+
+    /// <summary>지금 책상에 소환되어 있는 쇼핑백의 드롭존. 아직 소환 안 했으면 null.</summary>
+    public RectTransform ActiveBagDropZone { get; private set; }
 
     [Header("씬 전환")]
     [Tooltip("포장 완료 후 돌아갈 화면①(주문/손님) 씬 이름. Build Profiles에 등록된 이름과 정확히 일치해야 함")]
@@ -144,6 +151,8 @@ public class PackagingSceneController : MonoBehaviour
 
         if (containerIndex <= 0)
         {
+            if (WarningPopupEffect.Instance != null)
+                WarningPopupEffect.Instance.PlayWarningAtMouse("아직 포장할 게 없어요!");
             Debug.LogWarning("PackagingSceneController: CraftResultSession.ContainerIndex가 비어있어 " +
                               "정답 판정을 할 수 없습니다.");
             return;
@@ -154,6 +163,8 @@ public class PackagingSceneController : MonoBehaviour
         if (chosenSize != correctSize)
         {
             OrderSession.Instance.RegisterComplaint();
+            if (WarningPopupEffect.Instance != null)
+                WarningPopupEffect.Instance.PlayWarningAtMouse("사이즈가 안 맞아요!");
             Debug.LogWarning($"잘못된 뚜껑을 선택했습니다. (정답: {correctSize}, 선택: {chosenSize}) -> complainCounter++");
             return;
         }
@@ -221,7 +232,31 @@ public class PackagingSceneController : MonoBehaviour
                               "CupVisualData의 Lid Closed Sprite가 채워져 있는지 확인하세요.");
         }
 
+        // 뚜껑이 덮였으니 안에 담긴 맛(스쿱/부채꼴) 비주얼은 더 이상 안 보여야 함
+        if (visualComposer != null)
+        {
+            visualComposer.HideAllSlots();
+        }
+
         IsLidOn = true;
+    }
+
+    /// <summary>BagClickable(쇼핑백 무더기)이 클릭될 때 호출. 책상(아이스크림 옆)에 쇼핑백을 소환함.</summary>
+    public void SpawnBagNextToIceCream()
+    {
+        if (ActiveBagDropZone != null) return; // 이미 소환돼 있으면 중복 생성 방지
+
+        if (bagVisualPrefab == null || bagSpawnPoint == null)
+        {
+            Debug.LogWarning("PackagingSceneController: Bag Visual Prefab 또는 Bag Spawn Point가 비어있습니다.");
+            return;
+        }
+
+        GameObject bagObj = Instantiate(bagVisualPrefab, bagSpawnPoint);
+        bagObj.transform.localPosition = Vector3.zero;
+        ActiveBagDropZone = bagObj.GetComponent<RectTransform>();
+
+        Debug.Log("쇼핑백이 책상에 소환됐습니다. 아이스크림을 여기로 드래그하세요.");
     }
 
     /// <summary>BagClickable이 쇼핑백 클릭 시 호출.</summary>
@@ -233,6 +268,8 @@ public class PackagingSceneController : MonoBehaviour
         if (!IsReadyForBag)
         {
             OrderSession.Instance.RegisterComplaint();
+            if (WarningPopupEffect.Instance != null)
+                WarningPopupEffect.Instance.PlayWarningAtMouse("뚜껑을 먼저 덮어주세요!");
             Debug.LogWarning("뚜껑이 덮이지 않아 쇼핑백에 넣을 수 없습니다. -> complainCounter++");
             return;
         }
@@ -240,9 +277,13 @@ public class PackagingSceneController : MonoBehaviour
         StartCoroutine(PackIntoBagAndComplete(bagRect));
     }
 
+    [Header("맛/베이스를 감싸는 전체 부모")]
+    [Tooltip("포장 완료 시 전체를 숨길 대상 (TableCupImage + FlavorSlot들을 감싸는 부모, 예: IceCreamVisualRoot). 비워두면 Table Cup Image만 숨김")]
+    public GameObject iceCreamVisualRoot;
+
     private IEnumerator PackIntoBagAndComplete(RectTransform bagRect)
     {
-        // 뚜껑 때와 동일한 패턴: 잠깐의 텀을 두고 스프라이트만 교체
+        // 뚜껑 때와 동일한 패턴: 잠깐의 텀을 두고 처리
         float elapsed = 0f;
         while (elapsed < bagFlyDuration)
         {
@@ -250,14 +291,25 @@ public class PackagingSceneController : MonoBehaviour
             yield return null;
         }
 
-        if (baggedSprite != null)
+        // 아이스크림 자체는 이제 안 보이게 (쇼핑백 안으로 들어간 것으로 취급, 더 이상 드래그도 안 되게 됨)
+        if (iceCreamVisualRoot != null)
+            iceCreamVisualRoot.SetActive(false);
+        else if (tableCupImage != null)
+            tableCupImage.gameObject.SetActive(false);
+
+        // 소환됐던 진짜 쇼핑백 쪽 이미지를 "담긴 모습"으로 교체
+        if (bagRect != null && baggedSprite != null)
         {
-            tableCupImage.sprite = baggedSprite;
+            var bagImage = bagRect.GetComponent<Image>();
+            if (bagImage != null)
+                bagImage.sprite = baggedSprite;
+            else
+                Debug.LogWarning("PackagingSceneController: 소환된 쇼핑백에서 Image 컴포넌트를 찾지 못했습니다.");
         }
-        else
+
+        if (visualComposer != null)
         {
-            Debug.LogWarning("PackagingSceneController: 쇼핑백에 담긴 이미지를 찾지 못했습니다. " +
-                              "Bagged Sprite 필드가 채워져 있는지 확인하세요.");
+            visualComposer.HideAllSlots();
         }
 
         IsPackagingComplete = true;
@@ -280,6 +332,8 @@ public class PackagingSceneController : MonoBehaviour
     {
         if (!IsPackagingComplete)
         {
+            if (WarningPopupEffect.Instance != null)
+                WarningPopupEffect.Instance.PlayWarningAtMouse("포장을 먼저 끝내주세요!");
             Debug.LogWarning("아직 포장이 끝나지 않았습니다. 쇼핑백을 먼저 클릭해서 포장을 완료하세요.");
             return;
         }

@@ -268,23 +268,20 @@ public class OrderSession : MonoBehaviour
     public OrderEvaluationSystem.Outcome? LastOrderOutcome;
 
     /// <summary>
-    /// CurrentOrder.paper(주문서 요약 텍스트, 예: "니코, 민초 쿠앤크")의
-    /// 첫 항목(사이즈 이름)을 CupSize enum으로 변환.
-    /// ⚠️ paper 형식이 "사이즈, 맛1 맛2 ..." 순서라는 가정으로 작성함 - 김정민님과 형식 재확인 필요.
+    /// CurrentOrder.scoopCount(주문한 스쿱 개수, 1~6)를 CupSize enum으로 변환.
+    /// paper(주문서 텍스트, 예: "바닐라 하나")는 자연스러운 문장이라 파싱이 불안정해서
+    /// 대신 이미 구조화된 scoopCount 필드를 사용함.
     /// </summary>
     public CupSize? GetOrderedCupSize()
     {
-        if (CurrentOrder == null || string.IsNullOrWhiteSpace(CurrentOrder.paper))
+        if (CurrentOrder == null || CurrentOrder.scoopCount < 1 || CurrentOrder.scoopCount > 6)
+        {
+            Debug.LogWarning($"OrderSession: scoopCount 값({CurrentOrder?.scoopCount})이 1~6 범위를 벗어나 " +
+                              "사이즈를 판정할 수 없습니다.");
             return null;
+        }
 
-        string firstPart = CurrentOrder.paper.Split(',')[0].Trim();
-
-        if (koreanSizeNames.TryGetValue(firstPart, out var size))
-            return size;
-
-        Debug.LogWarning($"OrderSession: paper 값 '{CurrentOrder.paper}'에서 사이즈를 인식하지 못했습니다 " +
-                          $"(첫 항목: '{firstPart}'). paper 형식을 김정민님과 확인하세요.");
-        return null;
+        return (CupSize)(CurrentOrder.scoopCount - 1); // 1~6 -> Ikko(0)~Rokko(5)
     }
 
     // ── 판정용 스냅샷 ──
