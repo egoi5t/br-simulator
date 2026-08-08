@@ -2,10 +2,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// 쇼핑백 오브젝트에 붙이는 스크립트.
-/// 클릭하면 PackagingSceneController.TryPackageIntoBag()을 호출해서 포장을 완료함
-/// (뚜껑 덮힌 → 쇼핑백 담긴 이미지로 교체, 평가 시스템 실행).
-/// ⚠️ 다음 씬으로 넘어가는 건 여기서 하지 않음 - "체크아웃" 버튼을 눌러야 넘어감.
+/// 쇼핑백 무더기(선반)에 붙이는 스크립트. 컵 선반의 CupClickSelectable과 같은 패턴.
+/// 클릭하면 포장 완료 처리가 아니라, 책상(아이스크림 옆)에 "실제 쇼핑백"을 소환함.
+/// 포장 완료는 그 소환된 쇼핑백 위로 아이스크림을 드래그해야(DraggableIceCream.cs) 처리됨.
 /// </summary>
 public class BagClickable : MonoBehaviour, IPointerClickHandler
 {
@@ -24,6 +23,6 @@ public class BagClickable : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        controller.TryPackageIntoBag(transform as RectTransform);
+        controller.SpawnBagNextToIceCream();
     }
 }

@@ -51,11 +51,11 @@ public class FilledCupVisualComposer : MonoBehaviour
     /// <summary>스쿱 1개일 때 오프셋 (중앙 그대로)</summary>
     private static readonly Vector2[] ScoopOffsetsForOne = { Vector2.zero };
 
-    /// <summary>스쿱 2개일 때 오프셋 (서로 반대 방향으로 살짝 어긋나게)</summary>
+    /// <summary>스쿱 2개일 때 오프셋 (좌우로 평행하게 벌어지게)</summary>
     private static readonly Vector2[] ScoopOffsetDirectionsForTwo =
     {
-        new Vector2(-1f, 0.4f),
-        new Vector2(1f, -0.4f)
+        new Vector2(-1f, 0f),
+        new Vector2(1f, 0f)
     };
 
     /// <summary>포장 모드 진입 시 호출. 실제 데이터(CraftResultSession)로 합성.</summary>
@@ -217,7 +217,8 @@ public class FilledCupVisualComposer : MonoBehaviour
     }
 #endif
 
-    private void HideAllSlots()
+    /// <summary>합성된 맛 비주얼(스쿱/부채꼴)을 전부 숨김. 뚜껑 덮일 때 외부에서 호출.</summary>
+    public void HideAllSlots()
     {
         foreach (var slot in flavorSlotImages)
         {
