@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 화면③ 2차 사용(포장) 씬의 컨트롤러.
@@ -9,7 +11,7 @@ using UnityEngine.UI;
 /// 상황에 따라 이 컴포넌트를 켜고 끄는 방식으로 쓸 예정.
 ///
 /// 흐름:
-/// 1. Start()에서 GameSessionData.FilledCupSprite를 테이블에 표시
+/// 1. Start()에서 OrderSession.Instance.FilledCupSprite를 테이블에 표시
 ///    (화면②가 아직 연결 안 됐으면 fallbackSprite로 대체)
 /// 2. 동시에 지금 사이즈가 뚜껑을 쓰는 사이즈인지 확인해서 lidRequired에 기억
 ///    (UI는 항상 그대로 보임 - 숨기지 않음)
@@ -29,6 +31,8 @@ public class PackagingSceneController : MonoBehaviour
     [Header("테이블의 완성 컵")]
     [Tooltip("테이블에 이미 놓여있는 완성 컵의 Image 컴포넌트를 직접 연결")]
     public Image tableCupImage;
+    [Tooltip("맛 데이터로 컵 이미지를 직접 합성하는 컴포넌트")]
+    public FilledCupVisualComposer visualComposer;
 
     [Header("뚜껑 처리")]
     public CupVisualData visualData;
@@ -41,10 +45,16 @@ public class PackagingSceneController : MonoBehaviour
     [Tooltip("쇼핑백에 담긴 후 보여줄 이미지. 사이즈 상관없이 공용 이미지 하나만 씀")]
     public Sprite baggedSprite;
 
+    [Header("씬 전환")]
+    [Tooltip("포장 완료 후 돌아갈 화면①(주문/손님) 씬 이름. Build Profiles에 등록된 이름과 정확히 일치해야 함")]
+    public string orderSceneName = "OrderScene";
+    [Tooltip("체크하면 포장 완료 시 씬 전환을 하지 않음 (이 씬만 단독 테스트할 때)")]
+    public bool skipSceneTransitionForTest = true;
+
     [Header("테스트용")]
-    [Tooltip("GameSessionData.FilledCupSprite가 비어있을 때(화면②ㅁ미연결) 대신 보여줄 더미 이미지")]
+    [Tooltip("Composer가 아직 없거나 CraftResultSession이 비어있을 때 대신 보여줄 더미 이미지")]
     public Sprite fallbackSprite;
-    [Tooltip("1차 화면을 안 거치고 이 씬만 단독으로 테스트할 때 체크. GameSessionData.SelectedCupSize를 강제로 지정함")]
+    [Tooltip("2차 화면만 단독으로 테스트할 때 체크. CraftResultSession을 강제로 채움")]
     public bool useDebugSize = false;
     public CupSize debugSize = CupSize.Goko;
 
@@ -68,8 +78,9 @@ public class PackagingSceneController : MonoBehaviour
     {
         if (useDebugSize)
         {
-            GameSessionData.SelectedCupSize = debugSize;
-            Debug.Log($"[테스트 모드] SelectedCupSize를 {debugSize}(으)로 강제 지정했습니다. " +
+            var dummyFlavors = new List<string> { "FLV-001", "FLV-005", "FLV-007" };
+            CraftResultSession.Instance.SetResult((int)debugSize + 1, dummyFlavors);
+            Debug.Log($"[테스트 모드] CraftResultSession을 {debugSize}(으)로 강제 지정했습니다. " +
                       "실제 플레이 흐름 테스트할 땐 Use Debug Size 체크 해제하세요.");
         }
 
@@ -80,35 +91,46 @@ public class PackagingSceneController : MonoBehaviour
     /// <summary>이 사이즈가 뚜껑을 쓰는 사이즈인지 미리 확인해서 lidRequired에 기억.</summary>
     private void CheckLidRequirement()
     {
-        CupSize? size = GameSessionData.SelectedCupSize;
-        var entry = (visualData != null && size.HasValue) ? visualData.GetEntry(size.Value) : null;
+        int containerIndex = CraftResultSession.Instance.ContainerIndex;
+
+        if (containerIndex <= 0)
+        {
+            Debug.LogWarning("PackagingSceneController: CraftResultSession.ContainerIndex가 비어있어 " +
+                              "뚜껑 필요 여부를 판단할 수 없습니다. 일단 '뚜껑 필요함'으로 처리합니다.");
+            lidRequired = true;
+            return;
+        }
+
+        CupSize size = (CupSize)(containerIndex - 1);
+        var entry = visualData != null ? visualData.GetEntry(size) : null;
 
         // 데이터가 없으면 일단 "필요하다"고 가정 (안전한 쪽으로)
         lidRequired = entry == null || entry.hasLid;
 
         if (!lidRequired)
         {
-            Debug.Log($"{size.Value}는 뚜껑이 필요 없는 사이즈입니다. " +
+            Debug.Log($"{size}는 뚜껑이 필요 없는 사이즈입니다. " +
                       "뚜껑 UI는 그대로 보이지만, 클릭 안 해도 포장 진행에는 지장 없습니다.");
         }
     }
 
-    /// <summary>화면②에서 넘어온 완성 이미지를 테이블에 표시</summary>
+    /// <summary>화면②에서 넘어온 맛 데이터로 완성 컵을 합성해서 표시</summary>
     private void DisplayFilledCup()
     {
-        Sprite spriteToShow = GameSessionData.FilledCupSprite != null
-            ? GameSessionData.FilledCupSprite
-            : fallbackSprite;
-
-        if (spriteToShow == null)
+        if (visualComposer != null)
         {
-            Debug.LogWarning("PackagingSceneController: 표시할 완성 컵 이미지가 없습니다. " +
-                              "화면②에서 GameSessionData.FilledCupSprite를 설정했는지, " +
-                              "혹은 Fallback Sprite를 임시로 넣었는지 확인하세요.");
-            return;
+            visualComposer.Compose();
         }
-
-        tableCupImage.sprite = spriteToShow;
+        else if (fallbackSprite != null)
+        {
+            // Composer가 아직 안 붙어있을 때 테스트용으로 최소한의 이미지라도 보여줌
+            tableCupImage.sprite = fallbackSprite;
+        }
+        else
+        {
+            Debug.LogWarning("PackagingSceneController: Visual Composer도 Fallback Sprite도 없어서 " +
+                              "완성 컵을 표시할 수 없습니다.");
+        }
     }
 
     /// <summary>LidClickable이 뚜껑 클릭 시 호출. 정답/오답 판정 후 진행.</summary>
@@ -118,20 +140,21 @@ public class PackagingSceneController : MonoBehaviour
     {
         if (IsLidOn) return; // 이미 덮여있으면 중복 처리 방지
 
-        CupSize? correctSize = GameSessionData.SelectedCupSize;
+        int containerIndex = CraftResultSession.Instance.ContainerIndex;
 
-        if (!correctSize.HasValue)
+        if (containerIndex <= 0)
         {
-            Debug.LogWarning("PackagingSceneController: GameSessionData.SelectedCupSize가 비어있어 " +
-                              "정답 판정을 할 수 없습니다. 1차 화면에서 컵을 먼저 선택하고 오세요.");
+            Debug.LogWarning("PackagingSceneController: CraftResultSession.ContainerIndex가 비어있어 " +
+                              "정답 판정을 할 수 없습니다.");
             return;
         }
 
-        if (chosenSize != correctSize.Value)
+        CupSize correctSize = (CupSize)(containerIndex - 1);
+
+        if (chosenSize != correctSize)
         {
-            // 오답: 지금은 경고만 출력. 나중에 complainCounter 연동 지점.
-            Debug.LogWarning($"잘못된 뚜껑을 선택했습니다. (정답: {correctSize.Value}, 선택: {chosenSize}) " +
-                              "-> complainCounter++ 연동 필요");
+            OrderSession.Instance.RegisterComplaint();
+            Debug.LogWarning($"잘못된 뚜껑을 선택했습니다. (정답: {correctSize}, 선택: {chosenSize}) -> complainCounter++");
             return;
         }
 
@@ -209,8 +232,8 @@ public class PackagingSceneController : MonoBehaviour
 
         if (!IsReadyForBag)
         {
-            // 뚜껑이 안 덮인 상태로 쇼핑백을 누른 경우 -> 지금은 경고만. complainCounter 연동 지점.
-            Debug.LogWarning("뚜껑이 덮이지 않아 쇼핑백에 넣을 수 없습니다. -> complainCounter++ 연동 필요");
+            OrderSession.Instance.RegisterComplaint();
+            Debug.LogWarning("뚜껑이 덮이지 않아 쇼핑백에 넣을 수 없습니다. -> complainCounter++");
             return;
         }
 
@@ -227,8 +250,6 @@ public class PackagingSceneController : MonoBehaviour
             yield return null;
         }
 
-        CupSize? size = GameSessionData.SelectedCupSize; // 로그/추후 확장용으로만 참고
-
         if (baggedSprite != null)
         {
             tableCupImage.sprite = baggedSprite;
@@ -241,10 +262,34 @@ public class PackagingSceneController : MonoBehaviour
 
         IsPackagingComplete = true;
 
-        Debug.Log("포장 완료! -> 주문 처리 정산 시작 지점 (complainCounter/bossCounter 판정 여기서 연동 필요)");
+        OrderEvaluationSystem.Outcome outcome = OrderEvaluationSystem.Evaluate();
+        OrderSession.Instance.LastOrderOutcome = outcome;
+        Debug.Log($"포장 완료! 주문 처리 결과: {outcome} -> '체크아웃' 버튼을 누르면 다음으로 넘어갑니다.");
+        // 일일 정산 트리거는 여기서 하지 않음. 화면①에서 손님에게 전달까지 끝난 뒤,
+        // OrderSession.IsTodayComplete()를 체크해서 DailySettlementScene으로 넘어가는 방식.
 
-        // TODO: 여기서 다음 단계로 이어지는 처리
-        // 예) 화면①로 돌아가서 손님에게 제공하는 씬 전환
-        // 예) SceneManager.LoadScene("OrderScene");
+        // 다음 손님 주문 때 이 씬이 다시 "1차(용기 선택) 모드"로 진입하도록 초기화
+        CraftResultSession.Instance.SetResult(0, new List<string>());
+    }
+
+    /// <summary>
+    /// "체크아웃" 버튼 클릭 시 호출 (CheckoutSceneModeController가 연결).
+    /// 쇼핑백으로 포장이 이미 끝난 상태여야만 다음 씬으로 넘어감.
+    /// </summary>
+    public void GoToNextScene()
+    {
+        if (!IsPackagingComplete)
+        {
+            Debug.LogWarning("아직 포장이 끝나지 않았습니다. 쇼핑백을 먼저 클릭해서 포장을 완료하세요.");
+            return;
+        }
+
+        if (skipSceneTransitionForTest)
+        {
+            Debug.Log("[테스트 모드] Skip Scene Transition For Test 체크됨 - 씬 전환 생략");
+            return;
+        }
+
+        SceneManager.LoadScene(orderSceneName);
     }
 }

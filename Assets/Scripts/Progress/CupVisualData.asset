@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entries:
   - size: 0
-    shelfStackSprite: {fileID: -5140940609221120570, guid: 00c1763d637f427439796b0641e2837d, type: 3}
-    tableCupSprite: {fileID: -5140940609221120570, guid: 00c1763d637f427439796b0641e2837d, type: 3}
+    shelfStackSprite: {fileID: -5140940609221120570, guid: e157b27b3fceec34c8f518cf8b181a7c, type: 3}
+    tableCupSprite: {fileID: -5140940609221120570, guid: e157b27b3fceec34c8f518cf8b181a7c, type: 3}
     hasLid: 0
     lidStackSprite: {fileID: 0}
     lidClosedSprite: {fileID: -2657983804319211248, guid: 196b604e3dd13dc488d70499c3d4c5eb, type: 3}
   - size: 1
-    shelfStackSprite: {fileID: -7012793814777847385, guid: f85a95f4d2838cd47b923db179b4393f, type: 3}
-    tableCupSprite: {fileID: -7012793814777847385, guid: f85a95f4d2838cd47b923db179b4393f, type: 3}
+    shelfStackSprite: {fileID: -7012793814777847385, guid: 6d05ac148c2b10646aaa3470508fa207, type: 3}
+    tableCupSprite: {fileID: -7012793814777847385, guid: 6d05ac148c2b10646aaa3470508fa207, type: 3}
     hasLid: 0
     lidStackSprite: {fileID: 0}
     lidClosedSprite: {fileID: -7073903225170190136, guid: 51d21275128634941a292a176a55fea3, type: 3}
