@@ -49,42 +49,42 @@ public class CheckoutSceneModeController : MonoBehaviour
         if (shelfArea != null) shelfArea.SetActive(!isPackagingPhase);
         if (packagingCupArea != null) packagingCupArea.SetActive(isPackagingPhase);
 
-        // 뚜껑/쇼핑백은 항상 "보이기는" 하되, 1차(용기 선택) 모드에서는 클릭만 막음
-        if (lidArea != null)
-        {
-            lidArea.SetActive(true);
-            SetClickableEnabled(lidArea.GetComponentsInChildren<LidClickable>(true), isPackagingPhase);
-        }
-        if (bagObject != null)
-        {
-            bagObject.SetActive(true);
-            SetClickableEnabled(bagObject.GetComponentsInChildren<BagClickable>(true), isPackagingPhase);
-        }
+        // 뚜껑/쇼핑백은 항상 "보이고 클릭도 되게" 둠. 잘못된 타이밍에 누르면
+        // 각 스크립트(SelectLid/TryPackageIntoBag) 안에서 경고를 띄우고 무시하는 방식으로 처리.
+        if (lidArea != null) lidArea.SetActive(true);
+        if (bagObject != null) bagObject.SetActive(true);
 
         // 로직 컴포넌트 활성화. Awake 시점에 처리해야 각 컨트롤러의 Start()가
         // 올바른 모드로 실행되거나(활성화된 쪽) 아예 안 실행됨(비활성화된 쪽).
         if (cupSelectionController != null) cupSelectionController.enabled = !isPackagingPhase;
         if (packagingController != null) packagingController.enabled = isPackagingPhase;
 
-        // 버튼 라벨/기능
+        // 버튼 라벨/기능 - 어느 모드든 항상 클릭은 되게 두고, 준비 안 됐으면
+        // 각 컨트롤러(OnNextButtonPressed / GoToNextScene) 안에서 경고 처리
+        if (nextButton != null)
+        {
+            nextButton.interactable = true;
+            nextButton.onClick.RemoveAllListeners();
+        }
+
         if (isPackagingPhase)
         {
             if (nextButtonLabel != null) nextButtonLabel.text = "Checkout";
 
             if (nextButton != null)
             {
-                nextButton.interactable = true;
-                nextButton.onClick.RemoveAllListeners();
                 nextButton.onClick.AddListener(() =>
                 {
                     if (packagingController != null)
-                        packagingController.GoToNextScene(); // 포장은 쇼핑백이 이미 끝냈어야 함
+                        packagingController.GoToNextScene(); // 포장 안 끝났으면 컨트롤러 내부에서 경고 처리
                 });
             }
         }
         else
         {
             if (nextButtonLabel != null) nextButtonLabel.text = "Go to Craft ->";
+            // Next Button의 onClick은 CupSelectionSceneController.Start()에서
+            // OnNextButtonPressed를 등록함 (1차 모드일 때만 그 컴포넌트가 활성화되므로)
         }
 
         Debug.Log($"[CheckoutSceneModeController] 모드: {(isPackagingPhase ? "2차(포장)" : "1차(용기 선택)")}");
@@ -98,7 +98,7 @@ public class CheckoutSceneModeController : MonoBehaviour
     /// <summary>
     /// 다른 스크립트의 Start()가 실행 순서상 이 스크립트보다 늦게 돌면서
     /// nextButton.interactable을 덮어써버리는 경우를 대비한 안전장치.
-    /// 한 프레임 기다렸다가 버튼 상태를 다시 한번 확실하게 맞춰줌.
+    /// 한 프레임 기다렸다가 버튼이 항상 클릭 가능한 상태인지 다시 한번 확인.
     /// </summary>
     private IEnumerator ForceButtonStateNextFrame()
     {
@@ -106,29 +106,7 @@ public class CheckoutSceneModeController : MonoBehaviour
 
         if (nextButton != null)
         {
-            nextButton.interactable = isPackagingPhase;
-        }
-    }
-
-    /// <summary>
-    /// 뚜껑/쇼핑백을 화면엔 그대로 보이게 두되, Image의 Raycast Target을 꺼서
-    /// 클릭 이벤트만 안 먹히게 만듦 (SetActive로 숨기는 게 아니라 "먹통"으로만 처리).
-    /// </summary>
-    private void SetClickableEnabled(LidClickable[] clickables, bool enabled)
-    {
-        foreach (var c in clickables)
-        {
-            var img = c.GetComponent<Image>();
-            if (img != null) img.raycastTarget = enabled;
-        }
-    }
-
-    private void SetClickableEnabled(BagClickable[] clickables, bool enabled)
-    {
-        foreach (var c in clickables)
-        {
-            var img = c.GetComponent<Image>();
-            if (img != null) img.raycastTarget = enabled;
+            nextButton.interactable = true;
         }
     }
 }
