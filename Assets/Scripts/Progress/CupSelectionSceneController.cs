@@ -55,19 +55,9 @@ public class CupSelectionSceneController : MonoBehaviour
         if (startTimerHere)
             OrderSession.Instance.StartOrderTimer(orderTimeLimit);
 
-        if (simulateOrder && OrderSession.Instance.CurrentOrder == null)
-        {
-            // 화면①이 아직 없어서 OrderSession에 주문이 없는 경우, 테스트용 더미 주문 생성
-            var dummyOrder = new CustomerOrder
-            {
-                paper = $"{OrderSession.ToKoreanSizeName(debugOrderedSize)}, 테스트맛"
-            };
-            OrderSession.Instance.SetOrder(dummyOrder, new Dictionary<string, FlavorData>());
-            Debug.Log($"[테스트 모드] 더미 주문 생성 (paper=\"{dummyOrder.paper}\"). " +
-                      "실제 화면①과 연동되면 Simulate Order 체크 해제하세요.");
-        }
 
-        nextButton.interactable = false;
+
+        nextButton.interactable = true; // 항상 클릭 가능. 준비 안 됐으면 클릭 시 경고 처리
         nextButton.onClick.AddListener(OnNextButtonPressed);
         UpdateTimerDisplay();
 
@@ -152,6 +142,8 @@ public class CupSelectionSceneController : MonoBehaviour
         if (selectedCup == null)
         {
             OrderSession.Instance.RegisterComplaint();
+            if (WarningPopupEffect.Instance != null)
+                WarningPopupEffect.Instance.PlayWarningAtMouse("시간이 초과됐어요!");
             Debug.Log("시간 초과: 용기 선택 실패 -> complainCounter++");
         }
     }
@@ -162,7 +154,13 @@ public class CupSelectionSceneController : MonoBehaviour
 
     private void OnNextButtonPressed()
     {
-        if (selectedCup == null) return;
+        if (selectedCup == null)
+        {
+            if (WarningPopupEffect.Instance != null)
+                WarningPopupEffect.Instance.PlayWarningAtMouse("컵을 먼저 골라주세요!");
+            Debug.LogWarning("[다음 버튼] selectedCup이 비어있어서 경고 표시함");
+            return;
+        }
 
         timerRunning = false;
 
