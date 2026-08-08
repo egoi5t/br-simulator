@@ -73,11 +73,26 @@ public class CheatSheetUI : MonoBehaviour
 
         // 새 주문이 잡히면 토글 버튼은 다시 보이게 하고, paper 텍스트를 갱신
         if (toggleButton != null) toggleButton.gameObject.SetActive(true);
-        if (paperText != null) paperText.text = order.paper;
+        if (paperText != null) paperText.text = FormatPaper(order.paper);
 
         // 평소엔 닫혀있다가 플레이어가 클릭해서 열어보는 방식이므로,
         // 새 주문이 시작될 때마다 패널은 무조건 닫힌 상태로 리셋
         if (panel != null) panel.SetActive(false);
+    }
+
+    // "니코, 민초 쿠앤크" 같은 콤마 구분 문자열을 줄마다 하나씩 보이게 변환
+    private string FormatPaper(string raw)
+    {
+        if (string.IsNullOrEmpty(raw)) return "";
+
+        string[] parts = raw.Split(',');
+        for (int i = 0; i < parts.Length; i++)
+        {
+            parts[i] = parts[i].Trim();                 // 콤마 뒤 공백(" 민초...") 제거
+            parts[i] = parts[i].Trim('"', '\u201C', '\u201D'); // 혹시 남아있는 큰따옴표(일반/스마트 따옴표) 제거
+        }
+
+        return string.Join("\n", parts);
     }
 
     private void TogglePanel()
