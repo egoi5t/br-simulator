@@ -26,6 +26,7 @@ public class CustomerManager : MonoBehaviour
 
     [Header("씬 전환")]
     public string cupSelectionSceneName = "CupSelectionScene"; // 주문 확인 버튼 누르면 이동
+    public string settlementSceneName = "SettlementScene";     // 하루 목표 손님 수를 채우면 이동
 
     [Header("배달용 쇼핑백 (드래그 아이템)")]
     public GameObject iceCreamBagPrefab; // DeliveryBagItem이 붙은 프리팹, 스프라이트는 쇼핑백 하나로 고정
@@ -252,15 +253,15 @@ public class CustomerManager : MonoBehaviour
 
         if (session.IsTodayComplete())
         {
+            int finishedDay = session.CurrentDay;
             session.AdvanceDay();
-            // TODO: 여기서 일일 정산 화면으로 전환하는 로직 연결 (session.CalculateDaySettlement() 사용)
-            Debug.Log($"{session.CurrentDay - 1}일차 손님 목표 달성. 정산 화면 연결 필요.");
 
-            if (session.IsGameComplete())
-            {
-                Debug.Log("4일차까지 전부 완료. 엔딩 처리 필요.");
-                yield break;
-            }
+            Debug.Log($"{finishedDay}일차 손님 목표 달성. 정산 씬으로 이동합니다.");
+
+            // 마지막 날(4일차) 정산인지 아닌지는 정산 씬에서 OrderSession.IsGameComplete()로 판단해서
+            // "다음 날 주문 씬으로" 갈지 "엔딩 씬으로" 갈지 정산 씬 쪽이 결정하도록 위임
+            SceneManager.LoadScene(settlementSceneName);
+            yield break; // 씬을 이미 나갔으니 다음 손님을 여기서 스폰하지 않음
         }
 
         SpawnNextCustomer();

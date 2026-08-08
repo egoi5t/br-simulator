@@ -701,9 +701,10 @@ MonoBehaviour:
   spawnPoint: {fileID: 1325011793}
   visualData: {fileID: 11400000, guid: 6989b73e06bee7b46ab2117d2f52cd52, type: 2}
   cupSelectionSceneName: CupSelectionScene
+  settlementSceneName: DailySettlementScene
   iceCreamBagPrefab: {fileID: 488564200891574506, guid: d46172a046e457f4d8fd0fa1218a0567, type: 3}
   iceCreamSpawnPoint: {fileID: 465363415}
-  resultDisplayDuration: 1.5
+  resultDisplayDuration: 3
 --- !u!4 &1162671306
 Transform:
   m_ObjectHideFlags: 0
