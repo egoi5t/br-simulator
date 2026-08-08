@@ -2,8 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// 씬에 빈 오브젝트를 만들고 이 스크립트를 붙인 뒤,
-// 인스펙터에서 customerCsvFile / flavorCsvFile / customerPrefab / spawnPoint 를 채워주세요.
+// OrderScene의 메인 컨트롤러.
+//
+// 이 스크립트는 OrderScene이 로드될 때마다 두 가지 상황 중 하나로 동작을 나눈다.
+//
+// [상황 A] 새 손님 차례 (OrderSession.CurrentOrder == null)
+//   → 스폰 큐에서 다음 손님을 꺼내 스폰, 주문 대사 출력, 확인 버튼 연결
+//
+// [상황 B] 컵선택→제작→포장을 거쳐 배달하러 돌아온 상황 (OrderSession.CurrentOrder != null)
+//   → 같은 손님을 대사 없이 조용히 다시 세워두기만 함 (확인 버튼 X)
+//   → 플레이어가 실제로 "전달" 동작을 했을 때(드래그 앤 드롭 등에서 DeliverToCustomer() 호출)
+//     OrderSession.LastOrderOutcome을 읽어 만족/불만족 대사를 그제서야 보여줌
 public class CustomerManager : MonoBehaviour
 {
     [Header("CSV 데이터 (customers.csv / flavors.csv 를 그대로 드래그)")]
@@ -15,80 +24,69 @@ public class CustomerManager : MonoBehaviour
     public Transform spawnPoint;        // 손님이 나타날 위치
     public CustomerVisualData visualData; // customer_id별 스프라이트 매핑 에셋
 
-    [Header("일자/할당량 설정")]
-    public int[] customersPerDay = new int[] { 7, 7, 8, 8 }; // 배열 길이 = 총 일수, 각 값 = 해당 날짜의 손님 수
-
     [Header("씬 전환")]
-    public string scoopSceneName = "IceCreamScoopScene"; // 실제 담기 씬 이름으로 변경
+    public string cupSelectionSceneName = "CupSelectionScene"; // 주문 확인 버튼 누르면 이동
 
-    // 날짜가 바뀌거나(파라미터: 방금 끝난 날짜) 전체 게임이 끝났을 때 UI 쪽에서 구독해서 쓸 수 있는 이벤트
-    public event System.Action<int> OnDayCompleted;
-    public event System.Action OnAllDaysCompleted;
+    [Header("배달 후 다음 손님으로 넘어가기 전 대기 시간(초)")]
+    public float resultDisplayDuration = 1.5f;
 
-    private List<CustomerOrder> allOrders;
     private Dictionary<string, FlavorData> flavorTable;
-
-    private List<CustomerOrder> spawnQueue; // 실제 스폰 순서 (0번=고정 첫 손님, 이후=랜덤)
-    private int spawnIndex = 0;
-    private int dayCustomerCount = 0;
-    private int currentDay = 1;
-
-    private CustomerOrder currentOrder;
     private GameObject currentCustomerObj;
+    private CustomerView currentView;
 
     void Start()
     {
-        LoadData();
-        BuildSpawnQueue();
-        SpawnNextCustomer();
+        LoadFlavorTable();
+
+        if (OrderSession.Instance.CurrentOrder != null)
+        {
+            // 상황 B: 배달하러 돌아온 상태
+            ShowReturningCustomer();
+        }
+        else
+        {
+            // 상황 A: 새 손님 차례
+            if (!OrderSession.Instance.IsSpawnQueueBuilt)
+                BuildSpawnQueueIntoSession();
+
+            SpawnNextCustomer();
+        }
     }
 
-    private void LoadData()
+    private void LoadFlavorTable()
     {
-        if (customerCsvFile == null || flavorCsvFile == null)
+        if (flavorCsvFile == null)
         {
-            Debug.LogError("CustomerManager: CSV TextAsset이 연결되지 않았습니다.");
+            Debug.LogError("CustomerManager: flavorCsvFile이 연결되지 않았습니다.");
+            return;
+        }
+        flavorTable = CsvOrderParser.ParseFlavors(flavorCsvFile.text);
+    }
+
+    // 게임 최초 시작 시 딱 한 번만 호출됨 (OrderSession에 큐가 없을 때만)
+    private void BuildSpawnQueueIntoSession()
+    {
+        if (customerCsvFile == null)
+        {
+            Debug.LogError("CustomerManager: customerCsvFile이 연결되지 않았습니다.");
             return;
         }
 
-        allOrders = CsvOrderParser.ParseCsv(customerCsvFile.text);
-        flavorTable = CsvOrderParser.ParseFlavors(flavorCsvFile.text);
+        List<CustomerOrder> allOrders = CsvOrderParser.ParseCsv(customerCsvFile.text);
+        var queue = new List<CustomerOrder>();
 
-        int expected = 0;
-        foreach (int n in customersPerDay) expected += n;
-
-        if (allOrders.Count != expected)
+        if (allOrders.Count > 0)
         {
-            Debug.LogWarning($"CSV 손님 수({allOrders.Count})가 예상 값({expected} = {ArrayToString(customersPerDay)} 합계)과 다릅니다. 확인해주세요.");
+            queue.Add(allOrders[0]); // 첫 손님 고정
+            List<CustomerOrder> rest = allOrders.GetRange(1, allOrders.Count - 1);
+            Shuffle(rest);
+            queue.AddRange(rest);
         }
+
+        OrderSession.Instance.SpawnQueue = queue;
+        OrderSession.Instance.SpawnIndex = 0;
     }
 
-    private string ArrayToString(int[] arr) => "[" + string.Join(",", arr) + "]";
-
-    private Sprite GetSpriteFor(string customerId)
-    {
-        if (visualData == null) return null;
-        return visualData.GetSprite(customerId);
-    }
-
-    // 0번 손님은 고정, 나머지는 랜덤 셔플해서 스폰 순서를 미리 만들어둔다.
-    private void BuildSpawnQueue()
-    {
-        spawnQueue = new List<CustomerOrder>();
-        if (allOrders == null || allOrders.Count == 0) return;
-
-        spawnQueue.Add(allOrders[0]); // 게임 시작 첫 손님 고정
-
-        List<CustomerOrder> rest = allOrders.GetRange(1, allOrders.Count - 1);
-        Shuffle(rest);
-        spawnQueue.AddRange(rest);
-
-        spawnIndex = 0;
-        dayCustomerCount = 0;
-        currentDay = 1;
-    }
-
-    // Fisher-Yates 셔플
     private void Shuffle(List<CustomerOrder> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
@@ -98,85 +96,146 @@ public class CustomerManager : MonoBehaviour
         }
     }
 
-    // 다음 손님을 스폰하고 말풍선에 주문 대사를 띄운다.
+    // [상황 A] 다음 손님을 스폰하고 말풍선에 주문 대사를 띄운다.
     public void SpawnNextCustomer()
     {
-        if (spawnQueue == null || spawnIndex >= spawnQueue.Count)
+        var session = OrderSession.Instance;
+
+        if (session.SpawnQueue == null || session.SpawnIndex >= session.SpawnQueue.Count)
         {
-            Debug.Log("모든 날짜의 손님이 끝났습니다.");
-            OnAllDaysCompleted?.Invoke();
-            // TODO: 엔딩/결과 씬으로 전환하는 로직을 여기 추가
+            Debug.Log("스폰할 손님이 더 이상 없습니다.");
             return;
         }
 
-        currentOrder = spawnQueue[spawnIndex];
-        spawnIndex++;
-        dayCustomerCount++;
+        CustomerOrder order = session.SpawnQueue[session.SpawnIndex];
+        session.SpawnIndex++;
+
+        SpawnCustomerObject(order);
+
+        currentView.ShowOrderLine();
+        currentView.SetConfirmAction(OnClickConfirmOrder);
+    }
+
+    // [상황 B] 이미 확정된 CurrentOrder로 같은 손님을 대사 없이 다시 세워둠
+    private void ShowReturningCustomer()
+    {
+        CustomerOrder order = OrderSession.Instance.CurrentOrder;
+        SpawnCustomerObject(order);
+        currentView.HideBubbleAndButton(); // 말풍선/확인 버튼 확실히 숨김 - 배달(전달) 동작만 기다리는 상태
+    }
+
+    private void SpawnCustomerObject(CustomerOrder order)
+    {
+        if (order == null)
+        {
+            Debug.LogError("CustomerManager: order가 null입니다. OrderSession.CurrentOrder 또는 SpawnQueue 상태를 확인하세요.");
+            return;
+        }
 
         if (currentCustomerObj != null)
             Destroy(currentCustomerObj);
 
         currentCustomerObj = Instantiate(customerPrefab, spawnPoint.position, spawnPoint.rotation);
+        currentView = currentCustomerObj.GetComponent<CustomerView>();
 
-        CustomerView view = currentCustomerObj.GetComponent<CustomerView>();
-        if (view == null)
+        if (currentView == null)
         {
             Debug.LogError("customerPrefab에 CustomerView 컴포넌트가 없습니다.");
             return;
         }
 
-        view.Setup(currentOrder, flavorTable, GetSpriteFor(currentOrder.customerId));
-        view.ShowOrderLine();
-        view.SetConfirmAction(OnClickConfirmOrder); // 프리팹 안의 확인 버튼을 이 매니저의 동작과 연결
-
-        // 오늘(currentDay번째) 할당량을 채웠는지 체크 (다음 스폰부터 날짜가 넘어감)
-        int todayQuota = GetQuotaForDay(currentDay);
-        if (dayCustomerCount >= todayQuota)
-        {
-            int finishedDay = currentDay;
-            dayCustomerCount = 0;
-            currentDay++;
-
-            OnDayCompleted?.Invoke(finishedDay);
-            // TODO: 날짜 전환 연출(화면 전환, "Day 2 시작!" 배너 등)이 필요하면 이 지점에서 처리
-
-            if (currentDay > customersPerDay.Length)
-            {
-                Debug.Log("마지막 날 손님까지 모두 스폰했습니다.");
-            }
-        }
+        currentView.Setup(order, flavorTable, GetSpriteFor(order.customerId));
     }
 
-    // day는 1부터 시작, 배열은 0부터 시작이라 -1 보정. 범위를 벗어나면 0(더 이상 없음) 반환
-    private int GetQuotaForDay(int day)
+    private Sprite GetSpriteFor(string customerId)
     {
-        int idx = day - 1;
-        if (idx < 0 || idx >= customersPerDay.Length) return 0;
-        return customersPerDay[idx];
+        if (visualData == null) return null;
+        return visualData.GetSprite(customerId);
     }
 
-    public int GetCurrentDay() => currentDay;
-    public int GetDayCustomerCount() => dayCustomerCount;
-    public int GetTotalDays() => customersPerDay.Length;
-
-    // '주문 확인' 버튼 등에서 호출: 현재 주문 정보를 다음 씬(아이스크림 담기)으로 넘기고 씬 전환
-    public void ConfirmOrderAndProceed(string nextSceneName)
-    {
-        if (currentOrder == null)
-        {
-            Debug.LogWarning("넘길 주문 정보가 없습니다.");
-            return;
-        }
-
-        OrderSession.Instance.SetOrder(currentOrder, flavorTable);
-        SceneManager.LoadScene(nextSceneName);
-    }
-
-    public CustomerOrder GetCurrentOrder() => currentOrder;
-
-    // '주문 확인' 버튼 OnClick에 파라미터 없이 바로 연결하는 용도
+    // "주문 확인" 버튼 클릭 시: 이번 주문을 OrderSession에 확정 저장하고 컵 선택 씬으로 이동
     public void OnClickConfirmOrder()
     {
-        ConfirmOrderAndProceed(scoopSceneName);
+        if (currentView == null) return;
+
+        CustomerOrder order = currentView.GetOrder();
+        OrderSession.Instance.SetOrder(order, flavorTable);
+
+        // 판정용 스냅샷도 같이 떠둠 (포장 단계에서 CurrentOrder가 사라져도 비교할 수 있도록)
+        OrderSession.Instance.SnapshotOrderedFlavorIds = new List<string>(order.flavorIds);
+
+        SceneManager.LoadScene(cupSelectionSceneName);
+    }
+
+    // [상황 B 전용] 드래그 앤 드롭 등 실제 전달 동작이 완료됐을 때 호출.
+    // OrderSession.LastOrderOutcome을 읽어 만족/불만족 대사를 보여주고, 다음 손님으로 넘어간다.
+    public void DeliverToCustomer()
+    {
+        StartCoroutine(DeliverRoutine());
+    }
+
+    private System.Collections.IEnumerator DeliverRoutine()
+    {
+        var session = OrderSession.Instance;
+        var outcome = session.LastOrderOutcome;
+
+        // 4단계 판정에 따라 카운터 반영 + 대사 결정
+        // (CustomerOrder엔 satisfiedLine/unsatisfiedLine 2종류뿐이라, NoProblem만 만족 대사, 나머지는 전부 불만족 대사)
+        bool isSatisfied = false;
+
+        switch (outcome)
+        {
+            case OrderEvaluationSystem.Outcome.NoProblem:
+                isSatisfied = true;
+                break;
+
+            case OrderEvaluationSystem.Outcome.NoTip:
+                session.RegisterComplaint();
+                break;
+
+            case OrderEvaluationSystem.Outcome.NoTipNoPay:
+                session.RegisterComplaint();
+                break;
+
+            case OrderEvaluationSystem.Outcome.BossAngry:
+                // 주석상 "앞선 패널티 전부 + bossCounter++" 이므로 컴플레인도 같이 기록
+                session.RegisterComplaint();
+                session.RegisterBossAnger();
+                break;
+
+            default:
+                Debug.LogWarning("CustomerManager: LastOrderOutcome이 설정되지 않은 상태로 배달이 호출됐습니다.");
+                break;
+        }
+
+        if (currentView != null)
+        {
+            if (isSatisfied)
+                currentView.ShowSatisfiedLine();
+            else
+                currentView.ShowUnsatisfiedLine();
+        }
+
+        yield return new WaitForSeconds(resultDisplayDuration);
+
+        session.LastOrderOutcome = null;
+        session.CompleteOrder();
+
+        session.CustomersServedToday++;
+
+        if (session.IsTodayComplete())
+        {
+            session.AdvanceDay();
+            // TODO: 여기서 일일 정산 화면으로 전환하는 로직 연결 (session.CalculateDaySettlement() 사용)
+            Debug.Log($"{session.CurrentDay - 1}일차 손님 목표 달성. 정산 화면 연결 필요.");
+
+            if (session.IsGameComplete())
+            {
+                Debug.Log("4일차까지 전부 완료. 엔딩 처리 필요.");
+                yield break;
+            }
+        }
+
+        SpawnNextCustomer();
     }
 }

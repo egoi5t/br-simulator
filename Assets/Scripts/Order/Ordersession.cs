@@ -71,6 +71,13 @@ public class OrderSession : MonoBehaviour
         SelectedCup = null;
         OnOrderChanged?.Invoke();
     }
+
+    // ── 스폰 큐 (화면① 전용, 씬을 나갔다 들어와도 유지되어야 함) ──
+    // CustomerManager가 여기에 큐를 만들어 넣고, 씬이 리로드돼도 이걸 이어서 사용.
+    public List<CustomerOrder> SpawnQueue { get; set; } = new List<CustomerOrder>();
+    public int SpawnIndex { get; set; } = 0;
+    public bool IsSpawnQueueBuilt => SpawnQueue != null && SpawnQueue.Count > 0;
+
     // ════════════════════════════════════════════════════════
     // 아래는 화면③(최보광) 작업분 추가.
     // 이 블록을 OrderSession 클래스의 마지막 닫는 중괄호(}) "바로 위"에 붙여넣으세요.

@@ -44,9 +44,28 @@ public class CustomerView : MonoBehaviour
             speechBubble.SetActive(false);
     }
 
+    // 배달 대기용(재등장) 상태: 말풍선/확인 버튼 둘 다 확실히 숨김.
+    // speechBubble의 자식 구조와 무관하게 동작하도록 각각 명시적으로 끔.
+    public void HideBubbleAndButton()
+    {
+        if (typingRoutine != null)
+        {
+            StopCoroutine(typingRoutine);
+            typingRoutine = null;
+        }
+
+        if (speechBubble != null)
+            speechBubble.SetActive(false);
+
+        if (confirmButton != null)
+            confirmButton.gameObject.SetActive(false);
+    }
+
     // 스폰 직후 주문 대사를 말풍선에 표시
     public void ShowOrderLine()
     {
+        if (confirmButton != null)
+            confirmButton.gameObject.SetActive(true); // 새 손님 차례에는 버튼 다시 보이게
         ShowLine(order.orderLine);
     }
 
