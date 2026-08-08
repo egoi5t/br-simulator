@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -31,37 +32,59 @@ public class CupSelectionSceneController : MonoBehaviour
     public float dropAnimDuration = 0.3f;
 
     [Header("타이머")]
-    public float timeLimit = 45f;
+    [Tooltip("이 씬이 주문의 시작점이면 체크 (화면① 역할을 겸하는 테스트 씬일 때). 실제 통합 시엔 화면①에서 이미 시작했을 것이므로 체크 해제")]
+    public bool startTimerHere = true;
+    [Tooltip("제한 시간(초). Start Timer Here가 체크됐을 때만 이 값으로 타이머가 시작됨")]
+    public float orderTimeLimit = 30f;
     public TMP_Text timerText;
-    private float remainingTime;
     private bool timerRunning = true;
+
+    [Header("테스트용 - 화면① 미연동 시 주문 시뮬레이션")]
+    [Tooltip("체크하면 이 씬 시작 시 더미 CustomerOrder를 만들어 OrderSession에 주입 (정확도 평가 테스트용)")]
+    public bool simulateOrder = true;
+    public CupSize debugOrderedSize = CupSize.Goko;
 
     [Header("다음 버튼")]
     public Button nextButton;
-
-    [Header("씬 전환")]
-    [Tooltip("제작(담기) 씬 이름")]
-    public string craftSceneName = "CraftScene";
 
     private GameObject currentCupOnTable;
     private CupSize? selectedCup = null;
 
     private void Start()
     {
-        remainingTime = timeLimit;
+        if (startTimerHere)
+            OrderSession.Instance.StartOrderTimer(orderTimeLimit);
+
+        if (simulateOrder && OrderSession.Instance.CurrentOrder == null)
+        {
+            // 화면①이 아직 없어서 OrderSession에 주문이 없는 경우, 테스트용 더미 주문 생성
+            var dummyOrder = new CustomerOrder
+            {
+                paper = $"{OrderSession.ToKoreanSizeName(debugOrderedSize)}, 테스트맛"
+            };
+            OrderSession.Instance.SetOrder(dummyOrder, new Dictionary<string, FlavorData>());
+            Debug.Log($"[테스트 모드] 더미 주문 생성 (paper=\"{dummyOrder.paper}\"). " +
+                      "실제 화면①과 연동되면 Simulate Order 체크 해제하세요.");
+        }
+
         nextButton.interactable = false;
         nextButton.onClick.AddListener(OnNextButtonPressed);
         UpdateTimerDisplay();
+
+        // 판정용 스냅샷: CurrentOrder가 나중에(포장 시점) null이 되어버리므로
+        // 지금(주문 정보가 살아있는 시점) 미리 떠둠
+        OrderSession.Instance.SnapshotOrderedCupSize = OrderSession.Instance.GetOrderedCupSize();
+        OrderSession.Instance.SnapshotOrderedFlavorIds = OrderSession.Instance.CurrentOrder != null
+            ? new List<string>(OrderSession.Instance.CurrentOrder.flavorIds)
+            : null;
     }
 
     private void Update()
     {
         if (!timerRunning) return;
 
-        remainingTime -= Time.deltaTime;
-        if (remainingTime <= 0f)
+        if (OrderSession.Instance.IsTimeUp())
         {
-            remainingTime = 0f;
             timerRunning = false;
             OnTimeUp();
         }
@@ -71,7 +94,7 @@ public class CupSelectionSceneController : MonoBehaviour
 
     private void UpdateTimerDisplay()
     {
-        int seconds = Mathf.CeilToInt(remainingTime);
+        int seconds = Mathf.CeilToInt(OrderSession.Instance.GetRemainingTime());
         int m = seconds / 60;
         int s = seconds % 60;
         timerText.text = $"{m}:{s:00}";
@@ -89,12 +112,15 @@ public class CupSelectionSceneController : MonoBehaviour
         currentCupOnTable.transform.localPosition = Vector3.zero;
 
         // 사이즈에 맞는 스프라이트를 데이터에서 찾아서 적용
+        // GetComponentInChildren을 써서 Image가 루트든 자식이든 상관없이 찾음
         var entry = visualData != null ? visualData.GetEntry(size) : null;
         if (entry != null && entry.tableCupSprite != null)
         {
-            var image = currentCupOnTable.GetComponent<Image>();
+            var image = currentCupOnTable.GetComponentInChildren<Image>();
             if (image != null)
                 image.sprite = entry.tableCupSprite;
+            else
+                Debug.LogWarning("TableCup 프리팹에서 Image 컴포넌트를 찾지 못했습니다.");
         }
 
         StartCoroutine(DropAnimation(currentCupOnTable.GetComponent<RectTransform>()));
@@ -125,23 +151,26 @@ public class CupSelectionSceneController : MonoBehaviour
     {
         if (selectedCup == null)
         {
-            // 시간 내 컵을 선택하지 못한 경우 -> complainCounter 연동 지점
-            Debug.Log("시간 초과: 용기 선택 실패 (complainCounter++ 연동 필요)");
-            // ScoreManager.Instance.AddComplaint();
+            OrderSession.Instance.RegisterComplaint();
+            Debug.Log("시간 초과: 용기 선택 실패 -> complainCounter++");
         }
     }
+
+    [Header("씬 전환")]
+    [Tooltip("1차(용기 선택) 완료 후 이동할 화면②(제작) 씬 이름. Build Profiles에 등록된 이름과 정확히 일치해야 함")]
+    public string craftSceneName = "CraftScene";
 
     private void OnNextButtonPressed()
     {
         if (selectedCup == null) return;
 
         timerRunning = false;
-        Debug.Log($"선택된 컵: {selectedCup} -> 제작(담기) 씬으로 전환");
 
-        // 선택한 컵 크기를 세션에 저장해 CraftScene 으로 넘긴다.
+        // 선택한 컵 정보를 다음 씬에서도 쓸 수 있게 저장
         OrderSession.Instance.SetSelectedCup(selectedCup.Value);
 
-        // 제작(담기) 씬으로 전환. Order -> CupSelection -> Craft 흐름.
+        Debug.Log($"선택된 컵: {selectedCup} -> {craftSceneName}로 전환");
+
         SceneManager.LoadScene(craftSceneName);
     }
 }

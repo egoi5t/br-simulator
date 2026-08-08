@@ -22,8 +22,17 @@ public class CupVisualData : ScriptableObject
         [Tooltip("선반의 CupStack에 적용할 '탑' 이미지 (1개~6개 쌓인 모양)")]
         public Sprite shelfStackSprite;
 
-        [Tooltip("테이블에 등장할 때 TableCup 프리팹에 적용할 완성 용기 이미지")]
+        [Tooltip("테이블에 등장할 때 TableCup 프리팹에 적용할 완성 용기 이미지 (뚜껑 없음)")]
         public Sprite tableCupSprite;
+
+        [Tooltip("이 사이즈가 뚜껑을 쓰는지 여부. 잇코/니코처럼 뚜껑이 없는 사이즈면 체크 해제")]
+        public bool hasLid = true;
+
+        [Tooltip("뚜껑 스택(클릭 전) 아이콘 이미지 - 사이즈에 맞는 뚜껑 모양. hasLid가 false면 안 씀")]
+        public Sprite lidStackSprite;
+
+        [Tooltip("뚜껑을 덮은 뒤의 컵 이미지. hasLid가 false면 안 씀")]
+        public Sprite lidClosedSprite;
     }
 
     public Entry[] entries = new Entry[6];

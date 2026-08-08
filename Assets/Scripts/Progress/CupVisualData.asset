@@ -14,20 +14,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entries:
   - size: 0
-    shelfStackSprite: {fileID: -2657983804319211248, guid: 196b604e3dd13dc488d70499c3d4c5eb, type: 3}
-    tableCupSprite: {fileID: 5158901478735289058, guid: 8cb54baf1c12a2b418c8b5fcfdd1b187, type: 3}
+    shelfStackSprite: {fileID: -5140940609221120570, guid: e157b27b3fceec34c8f518cf8b181a7c, type: 3}
+    tableCupSprite: {fileID: -5140940609221120570, guid: e157b27b3fceec34c8f518cf8b181a7c, type: 3}
+    hasLid: 0
+    lidStackSprite: {fileID: 0}
+    lidClosedSprite: {fileID: -2657983804319211248, guid: 196b604e3dd13dc488d70499c3d4c5eb, type: 3}
   - size: 1
-    shelfStackSprite: {fileID: -7073903225170190136, guid: 51d21275128634941a292a176a55fea3, type: 3}
-    tableCupSprite: {fileID: -806235168742223350, guid: 5b253129875f3054d9f49e6cf0cd4d2e, type: 3}
+    shelfStackSprite: {fileID: -7012793814777847385, guid: 6d05ac148c2b10646aaa3470508fa207, type: 3}
+    tableCupSprite: {fileID: -7012793814777847385, guid: 6d05ac148c2b10646aaa3470508fa207, type: 3}
+    hasLid: 0
+    lidStackSprite: {fileID: 0}
+    lidClosedSprite: {fileID: -7073903225170190136, guid: 51d21275128634941a292a176a55fea3, type: 3}
   - size: 2
-    shelfStackSprite: {fileID: -3185432906905415152, guid: 2e62a0a7a35ea314eb188d7eca541ed3, type: 3}
-    tableCupSprite: {fileID: 21300000, guid: 7612625c02254aebbc0b9954c8346c6a, type: 3}
+    shelfStackSprite: {fileID: 7694826568632328414, guid: 7891d38cf440db641a8dbe60ab9f48a8, type: 3}
+    tableCupSprite: {fileID: 7694826568632328414, guid: 7891d38cf440db641a8dbe60ab9f48a8, type: 3}
+    hasLid: 1
+    lidStackSprite: {fileID: -1184630525142289058, guid: b461d4c711b01c740bb551efc67febf2, type: 3}
+    lidClosedSprite: {fileID: -3185432906905415152, guid: 21ed1482d25c57b4eb3e7afe10c634b7, type: 3}
   - size: 3
-    shelfStackSprite: {fileID: 6197055894419047045, guid: 6f14a0e76e96a444c898f38d0f717ff0, type: 3}
-    tableCupSprite: {fileID: 21300000, guid: 896bd39bb40f46ba9f48a2cba27dbf43, type: 3}
+    shelfStackSprite: {fileID: -3689336253800004056, guid: 38a111e286d697144818fd79b289434f, type: 3}
+    tableCupSprite: {fileID: -3689336253800004056, guid: 38a111e286d697144818fd79b289434f, type: 3}
+    hasLid: 1
+    lidStackSprite: {fileID: -4981077414981499280, guid: 65c2934b799b74a448ec32737500a83d, type: 3}
+    lidClosedSprite: {fileID: 6197055894419047045, guid: 6e35dce46b8ae184f977852976bb5646, type: 3}
   - size: 4
-    shelfStackSprite: {fileID: -2246293848221964719, guid: af5d613665598ad44af070f8e41171b5, type: 3}
-    tableCupSprite: {fileID: 21300000, guid: 2266c8f5c47e48548db378c30f0f807d, type: 3}
+    shelfStackSprite: {fileID: 8028846431544220371, guid: 9473448cb8aa73a4d8b701ab07ca933d, type: 3}
+    tableCupSprite: {fileID: 8028846431544220371, guid: 9473448cb8aa73a4d8b701ab07ca933d, type: 3}
+    hasLid: 1
+    lidStackSprite: {fileID: 998480811421187013, guid: 90ef1309a4dcd6748a0394dbf0686405, type: 3}
+    lidClosedSprite: {fileID: -2246293848221964719, guid: b2b6f9117c1acb0469a6091753a83a1c, type: 3}
   - size: 5
-    shelfStackSprite: {fileID: -2977083730138505764, guid: 2c9b50b3ca9d43f49baff658f6d2b5aa, type: 3}
-    tableCupSprite: {fileID: 21300000, guid: e6682203455e4b9086f22a978b8181c7, type: 3}
+    shelfStackSprite: {fileID: 273118446163673908, guid: a0162729bc8387444b70eb53414bf1eb, type: 3}
+    tableCupSprite: {fileID: 273118446163673908, guid: a0162729bc8387444b70eb53414bf1eb, type: 3}
+    hasLid: 1
+    lidStackSprite: {fileID: -2834640655204063827, guid: 5ceec9455250a074e8d7403c610ad3af, type: 3}
+    lidClosedSprite: {fileID: -2977083730138505764, guid: 8ce654329b111fa4993d2be2eb734a10, type: 3}
