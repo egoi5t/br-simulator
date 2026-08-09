@@ -155,8 +155,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("담기 완료 - 포장 화면으로 이동");
 
-        //OrderSession.Instance.CompleteOrder();
-
+        OrderSession.Instance.CompleteOrder();
 
         SceneManager.LoadScene("CupSelectionScene");
     }
