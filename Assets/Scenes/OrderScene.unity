@@ -771,7 +771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8a0e4e6a9b3ef41bd2f59d1229af0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customerCsvFile: {fileID: 4900000, guid: 08fd85c214d05354ca28bdd42b4a458f, type: 3}
+  customerCsvFile: {fileID: 4900000, guid: 1fa910d830b57d84fb3a938ed89cd600, type: 3}
   flavorCsvFile: {fileID: 4900000, guid: eef2f8ac0ee8add43916cf88bf439d92, type: 3}
   customerPrefab: {fileID: 4057442788253212076, guid: e5f5a16503ff02c4ea3e0ef64eb90ec2, type: 3}
   spawnPoint: {fileID: 1325011793}
