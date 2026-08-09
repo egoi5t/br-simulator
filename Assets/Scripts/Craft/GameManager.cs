@@ -133,7 +133,11 @@ public class GameManager : MonoBehaviour
         // 완성 결과를 화면③(포장)으로 넘기기 위해 저장
         CraftResultSession.Instance.SetResult(selectedContainerIndex, currentFlavorIds);
 
+
         Debug.Log("담기 완료 - 포장 화면으로 이동");
+
+        //OrderSession.Instance.CompleteOrder();
+
 
         SceneManager.LoadScene("CupSelectionScene");
     }
