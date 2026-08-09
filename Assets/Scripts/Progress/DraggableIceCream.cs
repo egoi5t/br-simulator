@@ -55,11 +55,22 @@ public class DraggableIceCream : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
         if (droppedOnBag && controller != null)
         {
+            // 놓기 전에 미리 준비됐는지 확인 (성공할지 예측)
+            bool willSucceed = controller.IsReadyForBag;
+
             // 뚜껑 안 덮이는 등 준비 안 됐으면 TryPackageIntoBag 내부에서 알아서 경고 처리
             controller.TryPackageIntoBag(dropZone);
+
+            if (willSucceed)
+            {
+                // 성공한 경우: 원래 자리로 되돌리지 않고 놓인 자리(쇼핑백 위)에 그대로 둠.
+                // 잠시 후 PackagingSceneController가 알아서 숨겨줌 (원래 자리로 순간이동했다가
+                // 사라지는 것처럼 보이지 않게 하기 위함)
+                return;
+            }
         }
 
-        // 성공/실패 상관없이 아이스크림 자체는 항상 원래 자리로 되돌림
+        // 실패했거나(뚜껑 미완료 등) 쇼핑백 밖에 놓은 경우만 원래 자리로 되돌림
         rectTransform.anchoredPosition = originalPosition;
     }
 }

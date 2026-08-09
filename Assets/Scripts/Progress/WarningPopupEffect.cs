@@ -50,6 +50,8 @@ public class WarningPopupEffect : MonoBehaviour
     /// <summary>마우스 현재 위치에 경고 표시(짧은 설명 문구)를 띄움.</summary>
     public void PlayWarningAtMouse(string message = "잘못됐어요!")
     {
+        if (SfxManager.Instance != null) SfxManager.Instance.PlayError();
+
         if (canvasParent == null)
         {
             Debug.LogWarning("WarningPopupEffect: Canvas Parent가 연결되지 않았습니다.");

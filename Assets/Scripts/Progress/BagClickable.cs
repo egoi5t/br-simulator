@@ -23,6 +23,16 @@ public class BagClickable : MonoBehaviour, IPointerClickHandler
             return;
         }
 
+        // 1차(용기 선택) 화면에서는 아직 완성된 아이스크림이 없어서 쇼핑백을 소환하면 안 됨
+        if (CraftResultSession.Instance.ContainerIndex <= 0)
+        {
+            if (WarningPopupEffect.Instance != null)
+                WarningPopupEffect.Instance.PlayWarningAtMouse("아직 포장할 게 없어요!");
+            Debug.LogWarning("BagClickable: 아직 화면②에서 완성된 아이스크림이 없어 쇼핑백을 소환할 수 없습니다.");
+            return;
+        }
+
+        if (SfxManager.Instance != null) SfxManager.Instance.PlayBagSelect();
         controller.SpawnBagNextToIceCream();
     }
 }

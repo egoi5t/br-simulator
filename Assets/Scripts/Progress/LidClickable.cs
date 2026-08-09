@@ -27,6 +27,7 @@ public class LidClickable : MonoBehaviour, IPointerClickHandler
             return;
         }
 
+        if (SfxManager.Instance != null) SfxManager.Instance.PlayLidSelect();
         controller.SelectLid(lidSize, transform as RectTransform);
     }
 }

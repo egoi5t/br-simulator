@@ -20,6 +20,7 @@ public class CupClickSelectable : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (SfxManager.Instance != null) SfxManager.Instance.PlayCupSelect();
         controller.SelectCup(cupSize);
     }
 }
