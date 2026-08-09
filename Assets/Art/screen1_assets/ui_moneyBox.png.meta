@@ -1,14 +1,10 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: 7aeb74230ad59a74c8dd5c60155b1714
-=======
-guid: 6068f9a7f6ebaaa499aed1ac355bcd22
->>>>>>> main
+guid: 53378bf048e0af543af1e41b8bd82143
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4720807276212738451
-    second: _ending_success_0
+      213: 8109701220806846198
+    second: ui_moneyBox_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,33 +96,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-<<<<<<< HEAD
-=======
-  - serializedVersion: 4
-    buildTarget: WindowsStoreApps
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
->>>>>>> main
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: _ending_success_0
+      name: ui_moneyBox_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1920
-        height: 1080
+        width: 234
+        height: 68
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -135,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3995dbfa43da38140800000000000000
-      internalID: 4720807276212738451
+      spriteID: 6f66eb41b427b8070800000000000000
+      internalID: 8109701220806846198
       vertices: []
       indices: 
       edges: []
@@ -155,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      _ending_success_0: 4720807276212738451
+      ui_moneyBox_0: 8109701220806846198
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
