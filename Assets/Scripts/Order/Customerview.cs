@@ -28,6 +28,9 @@ public class CustomerView : MonoBehaviour
     [Header("주문 확인 버튼 (말풍선 안/옆에 배치)")]
     public Button confirmButton;
 
+    [Header("배달 드롭존 (손님 위에 겹쳐진 투명 UI)")]
+    public CustomerDropZone dropZone;
+
     private CustomerOrder order;
     private Dictionary<string, FlavorData> flavorTable;
     private Coroutine typingRoutine;
@@ -44,9 +47,28 @@ public class CustomerView : MonoBehaviour
             speechBubble.SetActive(false);
     }
 
+    // 배달 대기용(재등장) 상태: 말풍선/확인 버튼 둘 다 확실히 숨김.
+    // speechBubble의 자식 구조와 무관하게 동작하도록 각각 명시적으로 끔.
+    public void HideBubbleAndButton()
+    {
+        if (typingRoutine != null)
+        {
+            StopCoroutine(typingRoutine);
+            typingRoutine = null;
+        }
+
+        if (speechBubble != null)
+            speechBubble.SetActive(false);
+
+        if (confirmButton != null)
+            confirmButton.gameObject.SetActive(false);
+    }
+
     // 스폰 직후 주문 대사를 말풍선에 표시
     public void ShowOrderLine()
     {
+        if (confirmButton != null)
+            confirmButton.gameObject.SetActive(true); // 새 손님 차례에는 버튼 다시 보이게
         ShowLine(order.orderLine);
     }
 
@@ -89,6 +111,13 @@ public class CustomerView : MonoBehaviour
 
         confirmButton.onClick.RemoveAllListeners();
         confirmButton.onClick.AddListener(action);
+    }
+
+    // CustomerManager가 "배달 대기" 상태로 재등장시킬 때 호출: 드롭존에 배달 콜백 연결
+    public void SetDeliveryAction(UnityAction action)
+    {
+        if (dropZone != null)
+            dropZone.SetDeliveryCallback(action);
     }
 
     // 담기 씬에서 참고할 수 있도록 맛 ID를 맛 이름으로 변환

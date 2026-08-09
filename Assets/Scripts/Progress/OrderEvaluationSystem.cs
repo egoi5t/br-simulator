@@ -93,7 +93,7 @@ public static class OrderEvaluationSystem
         int tip = complainCount > 0 ? 0 : CalculateTip(elapsed);
         session.LastOrderTip = tip;
         session.DailyTipTotal += tip;
-        session.CustomersServedToday++;
+        //session.CustomersServedToday++;
 
         if (complainCount > 0)
             session.DailyComplainOccurred = true;
