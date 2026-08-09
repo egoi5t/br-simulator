@@ -3,8 +3,8 @@ guid: af8785775b25417469f0ab9ab60414d6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8865651697427507402
-    second: small_order_note_icon_0
+      213: -7029476731008894653
+    second: smallPaper_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,11 +96,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: small_order_note_icon_0
+      name: smallPaper_0
       rect:
         serializedVersion: 2
         x: 35
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ac8618f1f3f190b70800000000000000
-      internalID: 8865651697427507402
+      spriteID: 349375b2828427e90800000000000000
+      internalID: -7029476731008894653
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      small_order_note_icon_0: 8865651697427507402
+      smallPaper_0: -7029476731008894653
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
