@@ -1,20 +1,26 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
+// 씬에 빈 GameObject 만들어서 이 스크립트 붙이고,
+// 버튼 3개의 OnClick()에 각각 아래 메서드를 연결하면 됩니다.
 public class MainMenuManager : MonoBehaviour
 {
     [Header("씬 전환")]
-    public string orderSceneName = "OrderScene"; 
+    public string orderSceneName = "OrderScene"; // Build Settings에 등록된 이름과 동일해야 함
 
     [Header("환경설정 패널 (같은 씬 안의 UI 패널을 껐다 켰다 하는 방식)")]
-    public GameObject settingsPanel; // 비활성화 상태로 시작
+    public GameObject settingsPanel; // 비활성화 상태로 시작해두면 됨
+
+    [Header("게임방법 패널 (같은 씬 안의 UI 패널을 껐다 켰다 하는 방식)")]
+    public GameObject howToPlayPanel; // 비활성화 상태로 시작해두면 됨
 
     void Start()
     {
-        PlayerPrefs.DeleteAll(); //최종 빌드 시 반드시 삭제할것 (환경설정 초기화용)
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
+
+        if (howToPlayPanel != null)
+            howToPlayPanel.SetActive(false);
     }
 
     // 1) OrderScene으로 이동
@@ -35,6 +41,20 @@ public class MainMenuManager : MonoBehaviour
     {
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
+    }
+
+    // 4) 게임방법 패널 열기
+    public void OnClickOpenHowToPlay()
+    {
+        if (howToPlayPanel != null)
+            howToPlayPanel.SetActive(true);
+    }
+
+    // 4-1) 게임방법 패널 닫기 (패널 안의 '닫기'/'뒤로' 버튼에 연결)
+    public void OnClickCloseHowToPlay()
+    {
+        if (howToPlayPanel != null)
+            howToPlayPanel.SetActive(false);
     }
 
     // 3) 게임 종료
