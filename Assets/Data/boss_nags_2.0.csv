@@ -1,0 +1,33 @@
+﻿boss_id,channel,trigger,weight,line
+BOSS-001,bark,wrong_menu,2,용기부터 틀렸잖아. 손님이 시킨 게 그거야?
+BOSS-002,bark,wrong_menu,1,잇코 니코도 못 맞춰? 메뉴판 다시 봐.
+BOSS-003,bark,wrong_menu,1,그 용기가 아니라니까. 정신 차려.
+BOSS-004,bark,wrong_menu,1,크기부터 틀리면 그다음은 볼 것도 없지.
+BOSS-005,bark,wrong_flavor,2,그게 손님이 시킨 맛이야? 눈은 장식이냐.
+BOSS-006,bark,wrong_flavor,1,맛 하나 못 맞추면 어떡해. 주문서 다시 읽어.
+BOSS-007,bark,wrong_flavor,1,손님이 딴 맛 받고 갔잖아. 저 손해 누가 물어?
+BOSS-008,bark,wrong_flavor,1,맛을 이렇게 담으면 그냥 딴 아이스크림이지.
+BOSS-009,bark,too_slow,2,아이스크림 다 녹겠다. 손 좀 빨리.
+BOSS-010,bark,too_slow,1,손님 몇 분을 기다린 줄 알아?
+BOSS-011,bark,too_slow,1,이 속도면 하루에 몇 명이나 받겠냐.
+BOSS-012,bark,too_slow,1,30초가 그렇게 길어? 서둘러.
+BOSS-013,bark,boss_angry,2,내가 지금 몇 번을 참는 줄 알아? 똑바로 해.
+BOSS-014,bark,boss_angry,1,이건 그냥 넘어갈 수가 없다. 기억해 두지.
+BOSS-015,bark,boss_angry,1,또 이래? 이러다 진짜 잘린다.
+BOSS-016,bark,boss_angry,1,장사를 말아먹을 셈이야? 내가 다 보고 있어.
+BOSS-017,bark,clean,1,"흠, 방금 건 나쁘지 않았어."
+BOSS-018,bark,clean,1,"그래, 그 정도는 해줘야지."
+BOSS-019,bark,clean,1,...봐줄 만하네. 계속 그렇게 해.
+BOSS-020,bark,clean,1,손님 웃으면서 갔다. 이 페이스 유지해.
+BOSS-101,review,day_clean,2,오늘은 사고 없이 넘어갔군. 급여는 그대로다.
+BOSS-102,review,day_clean,1,딱히 흠잡을 데가 없네. 내일도 이렇게 해.
+BOSS-103,review,day_clean,1,조용한 하루였어. 나쁘지 않아.
+BOSS-104,review,day_complain,2,실수가 좀 있었어. 급여에서 5만 원 깐다.
+BOSS-105,review,day_complain,1,오늘 손님 몇 명 놓쳤지? 그만큼 네 몫도 줄어.
+BOSS-106,review,day_complain,1,팁 못 받은 주문이 있더군. 정신 바짝 차려.
+BOSS-107,review,day_boss,2,오늘 날 제대로 열받게 했어. 10만 원 삭감이야.
+BOSS-108,review,day_boss,1,이런 날은 그냥 못 넘어가지. 급여 깎는다.
+BOSS-109,review,day_boss,1,"경고했지? 오늘 성적, 월급에 반영된다."
+BOSS-110,review,fired,1,됐어. 더는 못 봐주겠다. 내일부터 나오지 마.
+BOSS-111,review,fired,1,여기까지야. 넌 해고다.
+BOSS-112,review,fired,1,세 번이면 충분했어. 짐 싸라.

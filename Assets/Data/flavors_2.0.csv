@@ -1,21 +1,21 @@
-﻿flavor_id,flavor_name
-FLV-001,Mint Chocolate Chip
-FLV-002,Puss in Boots
-FLV-003,Shooting Star
-FLV-004,Almond Bon Bon
-FLV-005,New York Cheesecake
-FLV-006,Cherry Jubilee
-FLV-007,Very Berry Strawberry
-FLV-008,Rainbow Sherbet
-FLV-009,Chocolate Mousse
-FLV-010,Cookies 'n Cream
-FLV-011,Love Potion #31
-FLV-012,Cotton Candy Wonderland
-FLV-013,Jamoca Almond Fudge
-FLV-014,Green Tea
-FLV-015,Pistachio Almond
-FLV-016,Pralines 'n Cream
-FLV-017,Twinberry Cheesecake
-FLV-018,Vanilla
-FLV-019,Chocolate
-FLV-020,31 Yogurt
+﻿flavor_id,flavor_name,flavor_name_ko
+FLV-001,Mint Chocolate Chip,민트 초콜릿 칩
+FLV-002,Puss in Boots,장화 신은 고양이
+FLV-003,Shooting Star,슈팅스타
+FLV-004,Almond Bon Bon,아몬드 봉봉
+FLV-005,New York Cheesecake,뉴욕 치즈케이크
+FLV-006,Cherry Jubilee,체리 쥬빌레
+FLV-007,Very Berry Strawberry,베리베리 스트로베리
+FLV-008,Rainbow Sherbet,레인보우 샤베트
+FLV-009,Chocolate Mousse,초콜릿 무스
+FLV-010,Cookies 'n Cream,쿠키 앤 크림
+FLV-011,Love Potion #31,사랑에 빠진 딸기
+FLV-012,Cotton Candy Wonderland,이상한 나라의 솜사탕
+FLV-013,Jamoca Almond Fudge,자모카 아몬드 훠지
+FLV-014,Green Tea,그린티
+FLV-015,Pistachio Almond,피스타치오 아몬드
+FLV-016,Pralines 'n Cream,프랄린 앤 크림
+FLV-017,Twinberry Cheesecake,트윈베리 치즈케이크
+FLV-018,Vanilla,바닐라
+FLV-019,Chocolate,초콜릿
+FLV-020,31 Yogurt,31 요거트
