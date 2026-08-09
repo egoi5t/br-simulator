@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class GameManager : MonoBehaviour
 
     [Header("연결할 오브젝트")]
     public ContainerVisual containerVisual;
+
+    [Header("타이머 표시")]
+    public TMP_Text timerText;
 
     private List<string> currentFlavorIds = new List<string>();
     private bool isMenuComplete = false;
@@ -60,6 +64,21 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("⚠️ OrderSession에 용기 정보 없음");
         }
+    }
+
+    private void Update()
+    {
+        UpdateTimerDisplay();
+    }
+
+    private void UpdateTimerDisplay()
+    {
+        if (timerText == null) return;
+
+        int seconds = Mathf.CeilToInt(OrderSession.Instance.GetRemainingTime());
+        int m = seconds / 60;
+        int s = seconds % 60;
+        timerText.text = $"{m}:{s:00}";
     }
 
     public void ReceiveContainer(int containerIndex)
