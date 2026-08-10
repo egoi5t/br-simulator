@@ -93,7 +93,7 @@ public static class OrderEvaluationSystem
         int tip = complainCount > 0 ? 0 : CalculateTip(elapsed);
         session.LastOrderTip = tip;
         session.DailyTipTotal += tip;
-        //session.CustomersServedToday++;
+        session.CustomersServedToday++;
 
         if (complainCount > 0)
             session.DailyComplainOccurred = true;
@@ -127,13 +127,18 @@ public static class OrderEvaluationSystem
 
         if (!orderedSize.HasValue || containerIndex <= 0)
         {
-            Debug.LogWarning("[평가] SnapshotOrderedCupSize 또는 CraftResultSession.ContainerIndex가 비어있어 " +
-                              "메뉴 확인을 건너뜁니다.");
+            Debug.LogWarning($"[평가/사이즈] 데이터 비어있음 - SnapshotOrderedCupSize={orderedSize}, " +
+                              $"CraftResultSession.ContainerIndex={containerIndex} -> 확인 건너뜀 (통과 처리)");
             return true; // 데이터 없으면 일단 통과 처리 (테스트 편의)
         }
 
         CupSize actualSize = (CupSize)(containerIndex - 1);
-        return orderedSize.Value == actualSize;
+        bool isMatch = orderedSize.Value == actualSize;
+
+        Debug.Log($"[평가/사이즈] 주문: {orderedSize.Value} (스냅샷) / 실제 제작: {actualSize} " +
+                  $"(ContainerIndex={containerIndex}) -> {(isMatch ? "일치 ✅" : "불일치 ❌")}");
+
+        return isMatch;
     }
 
     /// <summary>1차 화면에서 떠둔 스냅샷(주문한 맛) vs 실제로 담은 맛(CraftResultSession)이 같은지 확인 (순서 무관).</summary>
@@ -144,12 +149,20 @@ public static class OrderEvaluationSystem
 
         if (orderedFlavors == null || actualFlavors == null)
         {
-            Debug.LogWarning("[평가] 맛 스냅샷 또는 CraftResultSession.FlavorIds가 비어있어 맛 확인을 건너뜁니다.");
+            Debug.LogWarning($"[평가/맛] 데이터 비어있음 - SnapshotOrderedFlavorIds={(orderedFlavors == null ? "null" : "있음")}, " +
+                              $"CraftResultSession.FlavorIds={(actualFlavors == null ? "null" : "있음")} -> 확인 건너뜀 (통과 처리)");
             return true;
         }
 
+        string orderedStr = string.Join(", ", orderedFlavors);
+        string actualStr = string.Join(", ", actualFlavors);
+
         if (orderedFlavors.Count != actualFlavors.Count)
+        {
+            Debug.Log($"[평가/맛] 주문: [{orderedStr}] ({orderedFlavors.Count}개) / " +
+                      $"실제 제작: [{actualStr}] ({actualFlavors.Count}개) -> 개수 불일치 ❌");
             return false;
+        }
 
         var sortedOrdered = new List<string>(orderedFlavors);
         var sortedActual = new List<string>(actualFlavors);
@@ -158,9 +171,15 @@ public static class OrderEvaluationSystem
 
         for (int i = 0; i < sortedOrdered.Count; i++)
         {
-            if (sortedOrdered[i] != sortedActual[i]) return false;
+            if (sortedOrdered[i] != sortedActual[i])
+            {
+                Debug.Log($"[평가/맛] 주문: [{orderedStr}] / 실제 제작: [{actualStr}] " +
+                          $"-> 내용 불일치 ❌ ('{sortedOrdered[i]}' vs '{sortedActual[i]}'에서 다름)");
+                return false;
+            }
         }
 
+        Debug.Log($"[평가/맛] 주문: [{orderedStr}] / 실제 제작: [{actualStr}] -> 일치 ✅");
         return true;
     }
 }
