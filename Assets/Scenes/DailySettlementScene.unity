@@ -1833,7 +1833,7 @@ MonoBehaviour:
   happyEndingSceneName: HappyEndingScene
   badEndingSceneName: BadEndingScene
   nextOrderSceneName: OrderScene
-  useDebugValues: 1
+  useDebugValues: 0
   debugCurrentDay: 4
   debugTotalEarnings: 1000000
   debugBossCounter: 0
