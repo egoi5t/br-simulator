@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 
-
+// 환경설정 패널 오브젝트에 붙이는 스크립트.
+// 슬라이더 3개(SFX, BGM, 밝기)를 인스펙터에서 연결하면
+// 값 변경 시 자동으로 적용되고 PlayerPrefs에 저장됩니다.
 public class SettingsManager : MonoBehaviour
 {
     [Header("Audio Mixer (Expose한 파라미터 이름과 정확히 일치해야 함)")]
@@ -31,6 +33,12 @@ public class SettingsManager : MonoBehaviour
 
     void Start()
     {
+#if UNITY_EDITOR
+        // 에디터에서 Play할 때마다 자동 초기화 (테스트 편의용).
+        // #if UNITY_EDITOR로 감싸져 있어서 빌드에는 이 줄 자체가 포함 안 됨 - 지울 필요 없음.
+        PlayerPrefs.DeleteAll();
+#endif
+
         // 저장된 값 불러오기 (없으면 기본값)
         float sfx = PlayerPrefs.GetFloat(PREF_SFX, defaultSfx);
         float bgm = PlayerPrefs.GetFloat(PREF_BGM, defaultBgm);

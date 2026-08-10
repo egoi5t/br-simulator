@@ -860,6 +860,9 @@ MonoBehaviour:
   iceCreamBagPrefab: {fileID: 488564200891574506, guid: d46172a046e457f4d8fd0fa1218a0567, type: 3}
   iceCreamSpawnPoint: {fileID: 465363415}
   resultDisplayDuration: 4
+  sfxGroup: {fileID: -8276151129787171873, guid: bf5773fe855ef0d4f8dd3fe26f3ca4cb, type: 2}
+  deliverSound: {fileID: 8300000, guid: ceafafffc6f83a9479f5af8b7b2dfd30, type: 3}
+  daySettlementSound: {fileID: 8300000, guid: 43e5bcf7407160541af33776a76c8ad5, type: 3}
 --- !u!4 &1162671306
 Transform:
   m_ObjectHideFlags: 0
