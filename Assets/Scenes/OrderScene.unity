@@ -283,7 +283,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -301,6 +301,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 465363415}
+  - {fileID: 1038916564}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -622,6 +623,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 839886825}
   m_CullTransparentMesh: 1
+--- !u!1 &1038916563
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1038916564}
+  - component: {fileID: 1038916566}
+  - component: {fileID: 1038916565}
+  m_Layer: 5
+  m_Name: BossSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1038916564
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038916563}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 326125682}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1038916565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038916563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1038916566
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038916563}
+  m_CullTransparentMesh: 1
 --- !u!1 &1047040307
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,14 +849,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   customerCsvFile: {fileID: 4900000, guid: 1fa910d830b57d84fb3a938ed89cd600, type: 3}
   flavorCsvFile: {fileID: 4900000, guid: eef2f8ac0ee8add43916cf88bf439d92, type: 3}
+  bossNagCsvFile: {fileID: 4900000, guid: 693565f43130eb344a8a1b7b7a9e8808, type: 3}
   customerPrefab: {fileID: 4057442788253212076, guid: e5f5a16503ff02c4ea3e0ef64eb90ec2, type: 3}
   spawnPoint: {fileID: 1325011793}
   visualData: {fileID: 11400000, guid: 6989b73e06bee7b46ab2117d2f52cd52, type: 2}
+  bossReactionPrefab: {fileID: 135987001952432778, guid: 0760d5e9b1cf22342b73d6dc86e3c4d7, type: 3}
+  bossReactionSpawnPoint: {fileID: 1038916564}
   cupSelectionSceneName: CupSelectionScene
   settlementSceneName: DailySettlementScene
   iceCreamBagPrefab: {fileID: 488564200891574506, guid: d46172a046e457f4d8fd0fa1218a0567, type: 3}
   iceCreamSpawnPoint: {fileID: 465363415}
-  resultDisplayDuration: 3
+  resultDisplayDuration: 4
 --- !u!4 &1162671306
 Transform:
   m_ObjectHideFlags: 0

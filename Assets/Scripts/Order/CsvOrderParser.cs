@@ -25,6 +25,15 @@ public class FlavorData
     public string flavorName;
 }
 
+// ── boss_nags.csv 한 줄 (사장 잔소리) ──
+// 컬럼 순서: boss_id, line
+[System.Serializable]
+public class BossNagData
+{
+    public string bossId;
+    public string line;
+}
+
 // 순수 파싱 도구 모음 (씬에 붙일 필요 없음, static 으로 호출)
 public static class CsvOrderParser
 {
@@ -77,7 +86,28 @@ public static class CsvOrderParser
         return table;
     }
 
-    // ── 따옴표 존중 분리기 (두 파일 공용) ──
+    // ── boss_nags 파싱 : 리스트 형태 (랜덤으로 하나 뽑아 쓰는 용도라 딕셔너리 불필요) ──
+    public static List<BossNagData> ParseBossNags(string csvText)
+    {
+        var result = new List<BossNagData>();
+        string[] lines = csvText.Replace("\r", "").Split('\n');
+
+        for (int i = 1; i < lines.Length; i++) // 0번째는 헤더라 건너뜀
+        {
+            if (string.IsNullOrWhiteSpace(lines[i])) continue;
+
+            string[] cols = SplitCsvLine(lines[i]);
+
+            result.Add(new BossNagData
+            {
+                bossId = Get(cols, 0),
+                line = Get(cols, 1),
+            });
+        }
+        return result;
+    }
+
+    // ── 따옴표 존중 분리기 (세 파일 공용) ──
     private static string[] SplitCsvLine(string line)
     {
         var fields = new List<string>();

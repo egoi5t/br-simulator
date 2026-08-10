@@ -18,11 +18,16 @@ public class CustomerManager : MonoBehaviour
     [Header("CSV 데이터 (customers.csv / flavors.csv 를 그대로 드래그)")]
     public TextAsset customerCsvFile;
     public TextAsset flavorCsvFile;
+    public TextAsset bossNagCsvFile; // boss_nags.csv
 
     [Header("스폰 설정")]
     public GameObject customerPrefab;   // CustomerView가 붙은 프리팹
     public Transform spawnPoint;        // 손님이 나타날 위치
     public CustomerVisualData visualData; // customer_id별 스프라이트 매핑 에셋
+
+    [Header("테이블 - 사장 리액션 (Instantiate 방식)")]
+    public GameObject bossReactionPrefab;      // BossReactionInstance가 붙은 프리팹
+    public RectTransform bossReactionSpawnPoint; // 테이블 위 스폰 위치
 
     [Header("씬 전환")]
     public string cupSelectionSceneName = "CupSelectionScene"; // 주문 확인 버튼 누르면 이동
@@ -36,13 +41,16 @@ public class CustomerManager : MonoBehaviour
     public float resultDisplayDuration = 1.5f;
 
     private Dictionary<string, FlavorData> flavorTable;
+    private List<BossNagData> bossNags;
     private GameObject currentCustomerObj;
     private CustomerView currentView;
     private GameObject currentIceCreamBag;
+    private GameObject currentBossReactionObj;
 
     void Start()
     {
         LoadFlavorTable();
+        LoadBossNags();
 
         if (OrderSession.Instance.CurrentOrder != null)
         {
@@ -67,6 +75,16 @@ public class CustomerManager : MonoBehaviour
             return;
         }
         flavorTable = CsvOrderParser.ParseFlavors(flavorCsvFile.text);
+    }
+
+    private void LoadBossNags()
+    {
+        if (bossNagCsvFile == null)
+        {
+            Debug.LogWarning("CustomerManager: bossNagCsvFile이 연결되지 않았습니다. BossAngry 판정 시 잔소리가 안 뜹니다.");
+            return;
+        }
+        bossNags = CsvOrderParser.ParseBossNags(bossNagCsvFile.text);
     }
 
     // 게임 최초 시작 시 딱 한 번만 호출됨 (OrderSession에 큐가 없을 때만)
@@ -151,6 +169,41 @@ public class CustomerManager : MonoBehaviour
             rect.anchoredPosition = Vector2.zero;
     }
 
+    // BossAngry 판정일 때 테이블에 사장 리액션을 잠깐 띄움 (Instantiate/Destroy 방식)
+    private void ShowBossReaction()
+    {
+        if (bossReactionPrefab == null || bossReactionSpawnPoint == null)
+        {
+            Debug.LogWarning("CustomerManager: bossReactionPrefab 또는 bossReactionSpawnPoint가 연결되지 않았습니다.");
+            return;
+        }
+
+        if (bossNags == null || bossNags.Count == 0)
+        {
+            Debug.LogWarning("CustomerManager: 표시할 사장 잔소리 데이터가 없습니다.");
+            return;
+        }
+
+        if (currentBossReactionObj != null)
+            Destroy(currentBossReactionObj);
+
+        currentBossReactionObj = Instantiate(bossReactionPrefab, bossReactionSpawnPoint);
+        var rect = currentBossReactionObj.GetComponent<RectTransform>();
+        if (rect != null)
+            rect.anchoredPosition = Vector2.zero;
+
+        var instance = currentBossReactionObj.GetComponent<BossReactionInstance>();
+        if (instance != null)
+        {
+            BossNagData pick = bossNags[Random.Range(0, bossNags.Count)];
+            instance.SetLine(pick.line);
+        }
+        else
+        {
+            Debug.LogError("CustomerManager: bossReactionPrefab에 BossReactionInstance 컴포넌트가 없습니다.");
+        }
+    }
+
     private void SpawnCustomerObject(CustomerOrder order)
     {
         if (order == null)
@@ -228,6 +281,7 @@ public class CustomerManager : MonoBehaviour
                 // 주석상 "앞선 패널티 전부 + bossCounter++" 이므로 컴플레인도 같이 기록
                 session.RegisterComplaint();
                 session.RegisterBossAnger();
+                ShowBossReaction();
                 break;
 
             default:
@@ -244,6 +298,12 @@ public class CustomerManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(resultDisplayDuration);
+
+        if (currentBossReactionObj != null)
+        {
+            Destroy(currentBossReactionObj); // 다음 손님으로 넘어가기 전에 확실히 정리
+            currentBossReactionObj = null;
+        }
 
         currentIceCreamBag = null; // DeliveryBagItem이 스스로 Destroy됐으므로 참조만 정리
         session.LastOrderOutcome = null;
