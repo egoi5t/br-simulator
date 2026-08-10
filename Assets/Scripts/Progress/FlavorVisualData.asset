@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entries:
   - flavorId: FLV-001
-    scoopSprite: {fileID: 21300000, guid: 987d2292045ceb64795f9361eb59ed87, type: 3}
+    scoopSprite: {fileID: 4300044018627760223, guid: aee760824ba7aed41a040375a7ea18a0, type: 3}
     discSprite: {fileID: -2425213970874485707, guid: 1d2a2f3189dcaa04189032e430fc3c3f, type: 3}
   - flavorId: FLV-002
     scoopSprite: {fileID: 1597294853046142275, guid: 42303438fd96ffc45b1c9cfd2b2a9102, type: 3}

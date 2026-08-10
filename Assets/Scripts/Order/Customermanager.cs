@@ -332,7 +332,7 @@ public class CustomerManager : MonoBehaviour
         if (session.IsTodayComplete())
         {
             int finishedDay = session.CurrentDay;
-            session.AdvanceDay();
+            //session.AdvanceDay();
 
             Debug.Log($"{finishedDay}일차 손님 목표 달성. 정산 씬으로 이동합니다.");
 
