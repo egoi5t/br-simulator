@@ -3597,6 +3597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040d95ea8d317124aaf67b502837ac26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sfxGroup: {fileID: -8276151129787171873, guid: bf5773fe855ef0d4f8dd3fe26f3ca4cb, type: 2}
   audioSource: {fileID: 1654821621}
   errorSfx: {fileID: 8300000, guid: 176872e150f04bc42a9ab3101a47aae2, type: 3}
   cupSelectSfx: {fileID: 8300000, guid: c8df05156ebd84644a574824e6caf4e1, type: 3}
