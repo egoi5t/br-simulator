@@ -335,6 +335,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuButton: {fileID: 1887937985}
+  endingImage: {fileID: 82738421}
+  firedSprite: {fileID: 8450844632237864721, guid: f26eeced1b67a9041ae16ac9685d0f14, type: 3}
   mainSceneName: MainScene
   resetProgressOnReturn: 1
 --- !u!1 &984949506

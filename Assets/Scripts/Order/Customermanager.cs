@@ -297,13 +297,16 @@ public class CustomerManager : MonoBehaviour
                 break;
 
             case OrderEvaluationSystem.Outcome.BossAngry:
-                ShowBossReaction();
                 break;
 
             default:
                 Debug.LogWarning("CustomerManager: LastOrderOutcome이 설정되지 않은 상태로 배달이 호출됐습니다.");
                 break;
         }
+
+        // over 60s etc. raised bossCounter this order -> show boss reaction regardless of outcome case
+        if (session.LastOrderBossAngered)
+            ShowBossReaction();
 
         if (currentView != null)
         {
@@ -334,11 +337,7 @@ public class CustomerManager : MonoBehaviour
             Debug.Log($"{finishedDay}일차 손님 목표 달성. 정산 씬으로 이동합니다.");
 
             // 정산 씬으로 넘어가기 전 효과음 (씬 전환 시 오브젝트가 파괴돼서 소리가 잘리므로, 재생 시간만큼 대기)
-            if (sfxSource != null && daySettlementSound != null)
-            {
-                sfxSource.PlayOneShot(daySettlementSound);
-                yield return new WaitForSeconds(daySettlementSound.length);
-            }
+            // 2026-08-10: end-of-day sound is now played in DailySettlementSceneController.Start() (avoid double play)
 
             // 마지막 날(4일차) 정산인지 아닌지는 정산 씬에서 OrderSession.IsGameComplete()로 판단해서
             // "다음 날 주문 씬으로" 갈지 "엔딩 씬으로" 갈지 정산 씬 쪽이 결정하도록 위임

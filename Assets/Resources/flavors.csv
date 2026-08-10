@@ -1,4 +1,4 @@
-flavor_id,flavor_name,flavor_name_ko,category,color_hex,unlock_level
+﻿flavor_id,flavor_name,flavor_name_ko,category,color_hex,unlock_level
 FLV-001,Mint Chocolate Chip,민트 초콜릿 칩,Mint,#98FF98,3
 FLV-002,Puss in Boots,장화 신은 고양이,Chocolate,#D2691E,1
 FLV-003,Shooting Star,슈팅스타,Fruit,#000080,4
@@ -9,7 +9,7 @@ FLV-007,Very Berry Strawberry,베리베리 스트로베리,Fruit,#FFB6C1,2
 FLV-008,Rainbow Sherbet,레인보우 샤베트,Fruit,#FFD700,3
 FLV-009,Chocolate Mousse,초콜릿 무스,Chocolate,#8B4513,3
 FLV-010,Cookies 'n Cream,쿠키 앤 크림,Vanilla,#F5F5DC,1
-FLV-011,Love Potion #31,사랑에 빠진 딸기,Chocolate,#FF69B4,4
+FLV-011,Love Potion #31,러브포션,Chocolate,#FF69B4,4
 FLV-012,Cotton Candy Wonderland,이상한 나라의 솜사탕,Vanilla,#FFC0CB,2
 FLV-013,Jamoca Almond Fudge,자모카 아몬드 훠지,Nut/Caramel,#A0522D,4
 FLV-014,Green Tea,그린티,Vanilla,#90EE90,1

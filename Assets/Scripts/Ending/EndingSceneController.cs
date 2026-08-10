@@ -17,6 +17,12 @@ public class EndingSceneController : MonoBehaviour
     [Header("버튼")]
     public Button mainMenuButton;
 
+    [Header("엔딩 이미지 (배드 엔딩 씬 전용: 해고 시 교체)")]
+    [Tooltip("엔딩 배경 Image. 해고(WasFired)면 아래 Fired Sprite로 교체됨. 해피 엔딩 씬에선 비워둬도 됨")]
+    public Image endingImage;
+    [Tooltip("해고 시 표시할 스프라이트 (_ending_fired)")]
+    public Sprite firedSprite;
+
     [Header("씬 전환")]
     public string mainSceneName = "MainScene";
 
@@ -26,6 +32,10 @@ public class EndingSceneController : MonoBehaviour
 
     private void Start()
     {
+        // 해고로 진입한 배드 엔딩이면 엔딩 이미지를 _ending_fired 로 교체
+        if (OrderSession.Instance.WasFired && endingImage != null && firedSprite != null)
+            endingImage.sprite = firedSprite;
+
         if (mainMenuButton != null)
         {
             mainMenuButton.onClick.RemoveAllListeners();
@@ -53,6 +63,7 @@ public class EndingSceneController : MonoBehaviour
         OrderSession.Instance.CurrentDay = 1;
         OrderSession.Instance.TotalEarnings = 0;
         OrderSession.Instance.BossCounter = 0;
+        OrderSession.Instance.WasFired = false;
         OrderSession.Instance.ComplainCounter = 0;
         OrderSession.Instance.DailyComplainOccurred = false;
         OrderSession.Instance.DailyBossOccurred = false;
