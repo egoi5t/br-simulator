@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 // OrderScene의 메인 컨트롤러.
 //
@@ -40,6 +41,13 @@ public class CustomerManager : MonoBehaviour
     [Header("배달 후 다음 손님으로 넘어가기 전 대기 시간(초)")]
     public float resultDisplayDuration = 1.5f;
 
+    [Header("효과음 (SFX)")]
+    public AudioMixerGroup sfxGroup;      // MainMixer의 SFX 그룹 드래그
+    public AudioClip deliverSound;        // 손님에게 아이스크림 건넬 때
+    public AudioClip daySettlementSound;  // 하루 끝나고 정산 씬으로 넘어갈 때
+
+    private AudioSource sfxSource;
+
     private Dictionary<string, FlavorData> flavorTable;
     private List<BossNagData> bossNags;
     private GameObject currentCustomerObj;
@@ -49,6 +57,7 @@ public class CustomerManager : MonoBehaviour
 
     void Start()
     {
+        SetupSfxSource();
         LoadFlavorTable();
         LoadBossNags();
 
@@ -65,6 +74,13 @@ public class CustomerManager : MonoBehaviour
 
             SpawnNextCustomer();
         }
+    }
+
+    private void SetupSfxSource()
+    {
+        sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.playOnAwake = false;
+        sfxSource.outputAudioMixerGroup = sfxGroup;
     }
 
     private void LoadFlavorTable()
@@ -259,8 +275,13 @@ public class CustomerManager : MonoBehaviour
         var session = OrderSession.Instance;
         var outcome = session.LastOrderOutcome;
 
-        // 4단계 판정에 따라 카운터 반영 + 대사 결정
-        // (CustomerOrder엔 satisfiedLine/unsatisfiedLine 2종류뿐이라, NoProblem만 만족 대사, 나머지는 전부 불만족 대사)
+        // 손님에게 아이스크림을 건네는 순간 효과음
+        if (sfxSource != null && deliverSound != null)
+            sfxSource.PlayOneShot(deliverSound);
+
+        // 카운터(ComplainCounter/BossCounter/CustomersServedToday)는 컵선택/포장 씬,
+        // OrderEvaluationSystem이 각 단계마다 이미 실시간으로 기록하고 있음.
+        // 여기선 그 결과값(outcome)을 "읽어서 대사/UI만" 결정하고, 중복 기록은 하지 않음.
         bool isSatisfied = false;
 
         switch (outcome)
@@ -270,17 +291,12 @@ public class CustomerManager : MonoBehaviour
                 break;
 
             case OrderEvaluationSystem.Outcome.NoTip:
-                session.RegisterComplaint();
                 break;
 
             case OrderEvaluationSystem.Outcome.NoTipNoPay:
-                session.RegisterComplaint();
                 break;
 
             case OrderEvaluationSystem.Outcome.BossAngry:
-                // 주석상 "앞선 패널티 전부 + bossCounter++" 이므로 컴플레인도 같이 기록
-                session.RegisterComplaint();
-                session.RegisterBossAnger();
                 ShowBossReaction();
                 break;
 
@@ -309,14 +325,20 @@ public class CustomerManager : MonoBehaviour
         session.LastOrderOutcome = null;
         session.CompleteOrder();
 
-        session.CustomersServedToday++;
-
+        // CustomersServedToday는 OrderEvaluationSystem이 포장 완료 시점에 이미 증가시키므로 여기선 읽기만 함
         if (session.IsTodayComplete())
         {
             int finishedDay = session.CurrentDay;
             session.AdvanceDay();
 
             Debug.Log($"{finishedDay}일차 손님 목표 달성. 정산 씬으로 이동합니다.");
+
+            // 정산 씬으로 넘어가기 전 효과음 (씬 전환 시 오브젝트가 파괴돼서 소리가 잘리므로, 재생 시간만큼 대기)
+            if (sfxSource != null && daySettlementSound != null)
+            {
+                sfxSource.PlayOneShot(daySettlementSound);
+                yield return new WaitForSeconds(daySettlementSound.length);
+            }
 
             // 마지막 날(4일차) 정산인지 아닌지는 정산 씬에서 OrderSession.IsGameComplete()로 판단해서
             // "다음 날 주문 씬으로" 갈지 "엔딩 씬으로" 갈지 정산 씬 쪽이 결정하도록 위임
