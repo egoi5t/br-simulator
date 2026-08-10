@@ -82,7 +82,7 @@ public class CheckoutSceneModeController : MonoBehaviour
         }
         else
         {
-            if (nextButtonLabel != null) nextButtonLabel.text = "Go to Craft ->";
+            if (nextButtonLabel != null) nextButtonLabel.text = "맛 선택으로";
             // Next Button의 onClick은 CupSelectionSceneController.Start()에서
             // OnNextButtonPressed를 등록함 (1차 모드일 때만 그 컴포넌트가 활성화되므로)
         }

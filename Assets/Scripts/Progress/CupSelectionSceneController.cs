@@ -53,9 +53,24 @@ public class CupSelectionSceneController : MonoBehaviour
     private void Start()
     {
         if (startTimerHere)
+        {
             OrderSession.Instance.StartOrderTimer(orderTimeLimit);
+            if (PersistentTimerUI.Instance != null)
+                PersistentTimerUI.Instance.ShowTimer();
+        }
 
-
+        if (simulateOrder && OrderSession.Instance.CurrentOrder == null)
+        {
+            // 화면①이 아직 없어서 OrderSession에 주문이 없는 경우, 테스트용 더미 주문 생성
+            var dummyOrder = new CustomerOrder
+            {
+                scoopCount = (int)debugOrderedSize + 1, // Ikko(0)~Rokko(5) -> 1~6
+                paper = "테스트 주문"
+            };
+            OrderSession.Instance.SetOrder(dummyOrder, new Dictionary<string, FlavorData>());
+            Debug.Log($"[테스트 모드] 더미 주문 생성 (scoopCount={dummyOrder.scoopCount}, {debugOrderedSize}). " +
+                      "실제 화면①과 연동되면 Simulate Order 체크 해제하세요.");
+        }
 
         nextButton.interactable = true; // 항상 클릭 가능. 준비 안 됐으면 클릭 시 경고 처리
         nextButton.onClick.AddListener(OnNextButtonPressed);
