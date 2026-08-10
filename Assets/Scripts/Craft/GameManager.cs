@@ -163,7 +163,10 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("담기 완료 - 포장 화면으로 이동");
 
-        OrderSession.Instance.CompleteOrder();
+        // 2026-08-10 회귀 수정: 여기서 CompleteOrder()를 부르면 주문/컵 데이터가 지워지고
+        // OnOrderChanged로 타이머가 숨겨져 → 포장 화면 타이머 사라짐 + 전달 스킵(다음 손님으로) 버그.
+        // CompleteOrder()는 전달(만족/불만 판정) 후 CustomerManager.DeliverRoutine에서만 호출해야 함.
+        // OrderSession.Instance.CompleteOrder();
 
         SceneManager.LoadScene("CupSelectionScene");
     }
