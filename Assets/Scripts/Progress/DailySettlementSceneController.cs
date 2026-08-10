@@ -86,24 +86,24 @@ public class DailySettlementSceneController : MonoBehaviour
 
     private void DisplayResult()
     {
-        if (dayLabel != null) dayLabel.text = $"Day {result.Day} Settlement";
+        if (dayLabel != null) dayLabel.text = $"{result.Day}일차 정산";
 
-        if (baseSalaryText != null) baseSalaryText.text = $"Base Salary: {result.BaseSalary:N0}";
+        if (baseSalaryText != null) baseSalaryText.text = $"기본급: {result.BaseSalary:N0}";
 
         if (complainDeductionText != null)
             complainDeductionText.text = result.ComplainDeduction > 0
-                ? $"Complaint Penalty: -{result.ComplainDeduction:N0}"
-                : "Complaint Penalty: none";
+                ? $"고객 불만 페널티: -{result.ComplainDeduction:N0}"
+                : "고객 불만 페널티: 없음";
 
         if (bossDeductionText != null)
             bossDeductionText.text = result.BossDeduction > 0
-                ? $"Manager Penalty: -{result.BossDeduction:N0}"
-                : "Manager Penalty: none";
+                ? $"사장 페널티: -{result.BossDeduction:N0}"
+                : "사장 페널티: 없음";
 
-        if (finalSalaryText != null) finalSalaryText.text = $"Final Salary: {result.FinalSalary:N0}";
-        if (tipTotalText != null) tipTotalText.text = $"Tips: {result.TipTotal:N0}";
-        if (dayTotalText != null) dayTotalText.text = $"Today Total: {result.DayTotal:N0}";
-        if (cumulativeText != null) cumulativeText.text = $"Total: {result.CumulativeTotal:N0} / {result.Goal:N0}";
+        if (finalSalaryText != null) finalSalaryText.text = $"최종 급여: {result.FinalSalary:N0}";
+        if (tipTotalText != null) tipTotalText.text = $"팁: {result.TipTotal:N0}";
+        if (dayTotalText != null) dayTotalText.text = $"오늘 합계: {result.DayTotal:N0}";
+        if (cumulativeText != null) cumulativeText.text = $"누적: {result.CumulativeTotal:N0} / {result.Goal:N0}";
     }
 
     private void OnContinueClicked()

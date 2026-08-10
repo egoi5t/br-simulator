@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 // OrderScene의 메인 컨트롤러.
 //
@@ -18,11 +19,16 @@ public class CustomerManager : MonoBehaviour
     [Header("CSV 데이터 (customers.csv / flavors.csv 를 그대로 드래그)")]
     public TextAsset customerCsvFile;
     public TextAsset flavorCsvFile;
+    public TextAsset bossNagCsvFile; // boss_nags.csv
 
     [Header("스폰 설정")]
     public GameObject customerPrefab;   // CustomerView가 붙은 프리팹
     public Transform spawnPoint;        // 손님이 나타날 위치
     public CustomerVisualData visualData; // customer_id별 스프라이트 매핑 에셋
+
+    [Header("테이블 - 사장 리액션 (Instantiate 방식)")]
+    public GameObject bossReactionPrefab;      // BossReactionInstance가 붙은 프리팹
+    public RectTransform bossReactionSpawnPoint; // 테이블 위 스폰 위치
 
     [Header("씬 전환")]
     public string cupSelectionSceneName = "CupSelectionScene"; // 주문 확인 버튼 누르면 이동
@@ -35,14 +41,25 @@ public class CustomerManager : MonoBehaviour
     [Header("배달 후 다음 손님으로 넘어가기 전 대기 시간(초)")]
     public float resultDisplayDuration = 1.5f;
 
+    [Header("효과음 (SFX)")]
+    public AudioMixerGroup sfxGroup;      // MainMixer의 SFX 그룹 드래그
+    public AudioClip deliverSound;        // 손님에게 아이스크림 건넬 때
+    public AudioClip daySettlementSound;  // 하루 끝나고 정산 씬으로 넘어갈 때
+
+    private AudioSource sfxSource;
+
     private Dictionary<string, FlavorData> flavorTable;
+    private List<BossNagData> bossNags;
     private GameObject currentCustomerObj;
     private CustomerView currentView;
     private GameObject currentIceCreamBag;
+    private GameObject currentBossReactionObj;
 
     void Start()
     {
+        SetupSfxSource();
         LoadFlavorTable();
+        LoadBossNags();
 
         if (OrderSession.Instance.CurrentOrder != null)
         {
@@ -59,6 +76,13 @@ public class CustomerManager : MonoBehaviour
         }
     }
 
+    private void SetupSfxSource()
+    {
+        sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.playOnAwake = false;
+        sfxSource.outputAudioMixerGroup = sfxGroup;
+    }
+
     private void LoadFlavorTable()
     {
         if (flavorCsvFile == null)
@@ -67,6 +91,16 @@ public class CustomerManager : MonoBehaviour
             return;
         }
         flavorTable = CsvOrderParser.ParseFlavors(flavorCsvFile.text);
+    }
+
+    private void LoadBossNags()
+    {
+        if (bossNagCsvFile == null)
+        {
+            Debug.LogWarning("CustomerManager: bossNagCsvFile이 연결되지 않았습니다. BossAngry 판정 시 잔소리가 안 뜹니다.");
+            return;
+        }
+        bossNags = CsvOrderParser.ParseBossNags(bossNagCsvFile.text);
     }
 
     // 게임 최초 시작 시 딱 한 번만 호출됨 (OrderSession에 큐가 없을 때만)
@@ -151,6 +185,41 @@ public class CustomerManager : MonoBehaviour
             rect.anchoredPosition = Vector2.zero;
     }
 
+    // BossAngry 판정일 때 테이블에 사장 리액션을 잠깐 띄움 (Instantiate/Destroy 방식)
+    private void ShowBossReaction()
+    {
+        if (bossReactionPrefab == null || bossReactionSpawnPoint == null)
+        {
+            Debug.LogWarning("CustomerManager: bossReactionPrefab 또는 bossReactionSpawnPoint가 연결되지 않았습니다.");
+            return;
+        }
+
+        if (bossNags == null || bossNags.Count == 0)
+        {
+            Debug.LogWarning("CustomerManager: 표시할 사장 잔소리 데이터가 없습니다.");
+            return;
+        }
+
+        if (currentBossReactionObj != null)
+            Destroy(currentBossReactionObj);
+
+        currentBossReactionObj = Instantiate(bossReactionPrefab, bossReactionSpawnPoint);
+        var rect = currentBossReactionObj.GetComponent<RectTransform>();
+        if (rect != null)
+            rect.anchoredPosition = Vector2.zero;
+
+        var instance = currentBossReactionObj.GetComponent<BossReactionInstance>();
+        if (instance != null)
+        {
+            BossNagData pick = bossNags[Random.Range(0, bossNags.Count)];
+            instance.SetLine(pick.line);
+        }
+        else
+        {
+            Debug.LogError("CustomerManager: bossReactionPrefab에 BossReactionInstance 컴포넌트가 없습니다.");
+        }
+    }
+
     private void SpawnCustomerObject(CustomerOrder order)
     {
         if (order == null)
@@ -206,8 +275,13 @@ public class CustomerManager : MonoBehaviour
         var session = OrderSession.Instance;
         var outcome = session.LastOrderOutcome;
 
-        // 4단계 판정에 따라 카운터 반영 + 대사 결정
-        // (CustomerOrder엔 satisfiedLine/unsatisfiedLine 2종류뿐이라, NoProblem만 만족 대사, 나머지는 전부 불만족 대사)
+        // 손님에게 아이스크림을 건네는 순간 효과음
+        if (sfxSource != null && deliverSound != null)
+            sfxSource.PlayOneShot(deliverSound);
+
+        // 카운터(ComplainCounter/BossCounter/CustomersServedToday)는 컵선택/포장 씬,
+        // OrderEvaluationSystem이 각 단계마다 이미 실시간으로 기록하고 있음.
+        // 여기선 그 결과값(outcome)을 "읽어서 대사/UI만" 결정하고, 중복 기록은 하지 않음.
         bool isSatisfied = false;
 
         switch (outcome)
@@ -217,17 +291,13 @@ public class CustomerManager : MonoBehaviour
                 break;
 
             case OrderEvaluationSystem.Outcome.NoTip:
-                session.RegisterComplaint();
                 break;
 
             case OrderEvaluationSystem.Outcome.NoTipNoPay:
-                session.RegisterComplaint();
                 break;
 
             case OrderEvaluationSystem.Outcome.BossAngry:
-                // 주석상 "앞선 패널티 전부 + bossCounter++" 이므로 컴플레인도 같이 기록
-                session.RegisterComplaint();
-                session.RegisterBossAnger();
+                ShowBossReaction();
                 break;
 
             default:
@@ -245,18 +315,30 @@ public class CustomerManager : MonoBehaviour
 
         yield return new WaitForSeconds(resultDisplayDuration);
 
+        if (currentBossReactionObj != null)
+        {
+            Destroy(currentBossReactionObj); // 다음 손님으로 넘어가기 전에 확실히 정리
+            currentBossReactionObj = null;
+        }
+
         currentIceCreamBag = null; // DeliveryBagItem이 스스로 Destroy됐으므로 참조만 정리
         session.LastOrderOutcome = null;
         session.CompleteOrder();
 
-        session.CustomersServedToday++;
-
+        // CustomersServedToday는 OrderEvaluationSystem이 포장 완료 시점에 이미 증가시키므로 여기선 읽기만 함
         if (session.IsTodayComplete())
         {
             int finishedDay = session.CurrentDay;
             session.AdvanceDay();
 
             Debug.Log($"{finishedDay}일차 손님 목표 달성. 정산 씬으로 이동합니다.");
+
+            // 정산 씬으로 넘어가기 전 효과음 (씬 전환 시 오브젝트가 파괴돼서 소리가 잘리므로, 재생 시간만큼 대기)
+            if (sfxSource != null && daySettlementSound != null)
+            {
+                sfxSource.PlayOneShot(daySettlementSound);
+                yield return new WaitForSeconds(daySettlementSound.length);
+            }
 
             // 마지막 날(4일차) 정산인지 아닌지는 정산 씬에서 OrderSession.IsGameComplete()로 판단해서
             // "다음 날 주문 씬으로" 갈지 "엔딩 씬으로" 갈지 정산 씬 쪽이 결정하도록 위임
