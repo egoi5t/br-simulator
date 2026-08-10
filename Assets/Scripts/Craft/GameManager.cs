@@ -127,6 +127,7 @@ public class GameManager : MonoBehaviour
         currentFlavorIds.Add(flavorId);
         int slotOrder = currentFlavorIds.Count;
         containerVisual.ApplyFlavor(slotOrder, flavorId, fileFormattedName);
+        CraftSfxManager.Instance?.PlayAddFlavor(); // 맛 담기 성공음
 
         Debug.Log("담긴 맛: " + string.Join(", ", currentFlavorIds));
     }
@@ -155,6 +156,7 @@ public class GameManager : MonoBehaviour
         }
 
         isMenuComplete = true;
+        CraftSfxManager.Instance?.PlayComplete(); // 담기 완성음
 
         // 완성 결과를 화면③(포장)으로 넘기기 위해 저장
         CraftResultSession.Instance.SetResult(selectedContainerIndex, currentFlavorIds);

@@ -62,6 +62,7 @@ public class FeedbackManager : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(ShakeRoutine());
         StartCoroutine(IconFlashAtScreenPosition(Input.mousePosition));
+        CraftSfxManager.Instance?.PlayError();
     }
 
     private IEnumerator IconFlashAtScreenPosition(Vector2 screenPos)
