@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 /// <summary>
@@ -29,6 +30,10 @@ public class PersistentTimerUI : MonoBehaviour
     [Header("타이머 텍스트")]
     public TMP_Text timerText;
 
+    // 2026-08-10: 이 씬들이 로드되면 타이머를 무조건 숨김 (메인·주문 받기·엔딩)
+    [Header("이 씬에서는 타이머 숨김 (메인/주문/엔딩 등)")]
+    public string[] hideOnScenes = { "MainScene", "OrderScene", "HappyEndingScene", "BadEndingScene" };
+
     private void Awake()
     {
         // 씬이 다시 로드되면서 이 오브젝트가 중복으로 또 생기는 경우 방지
@@ -47,12 +52,28 @@ public class PersistentTimerUI : MonoBehaviour
     private void OnEnable()
     {
         OrderSession.Instance.OnOrderChanged += HandleOrderChanged;
+        // 2026-08-10: 씬이 로드될 때마다 숨김 대상 씬인지 확인
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
         if (OrderSession.Instance != null)
             OrderSession.Instance.OnOrderChanged -= HandleOrderChanged;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // 2026-08-10: 메인·주문 받기·엔딩 씬에서는 타이머가 남아있지 않도록 자동 숨김
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        foreach (string sceneName in hideOnScenes)
+        {
+            if (scene.name == sceneName)
+            {
+                HideTimer();
+                return;
+            }
+        }
     }
 
     /// <summary>새 주문이 잡히거나(접수) 끝났을 때(전달 완료) 자동으로 호출됨.</summary>
