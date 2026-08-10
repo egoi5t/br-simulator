@@ -70,6 +70,8 @@ public class ToolManager : MonoBehaviour
                 break;
         }
 
+        CraftSfxManager.Instance?.PlayToolSelect();
+
         Debug.Log("µµ±∏ º±≈√µ : " + tool);
     }
 

@@ -421,6 +421,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48509762}
   m_CullTransparentMesh: 1
+--- !u!1 &96360535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 96360537}
+  - component: {fileID: 96360536}
+  m_Layer: 0
+  m_Name: CraftSfxManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &96360536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96360535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0ab86ca06f19345a86fbe915383193, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxGroup: {fileID: -8276151129787171873, guid: bf5773fe855ef0d4f8dd3fe26f3ca4cb, type: 2}
+  toolSelectSfx: {fileID: 8300000, guid: 0358141fac877c54fbe03fffd246bfb7, type: 3}
+  addFlavorSfx: {fileID: 8300000, guid: eaed0a8e25df7b24897e6da3b72b1a77, type: 3}
+  completeSfx: {fileID: 8300000, guid: 7d6cd8c44d16a974cbb197b2783eeb0c, type: 3}
+  errorSfx: {fileID: 8300000, guid: 176872e150f04bc42a9ab3101a47aae2, type: 3}
+--- !u!4 &96360537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96360535}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1092.1765, y: 537.0242, z: 1.1055962}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &135503979
 GameObject:
   m_ObjectHideFlags: 0
@@ -4072,3 +4121,4 @@ SceneRoots:
   - {fileID: 448584987}
   - {fileID: 1369121662}
   - {fileID: 663561928}
+  - {fileID: 96360537}

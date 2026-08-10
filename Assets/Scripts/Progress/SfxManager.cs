@@ -1,11 +1,15 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 /// <summary>
 /// 화면③ 전용 효과음 재생 매니저.
 /// 컵/뚜껑/쇼핑백 선택, 에러(경고) 시 소리를 재생함.
 ///
+/// ★ 중요: 소리가 타이틀 설정의 SFX 볼륨 슬라이더에 묶이려면
+///    반드시 인스펙터에서 Sfx Group 에 MainMixer 의 "SFX" 그룹을 연결해야 함.
+///
 /// 인스펙터 설정:
-/// - Audio Source: 소리를 재생할 AudioSource 컴포넌트 (같은 오브젝트에 붙여두면 됨)
+/// - Sfx Group : MainMixer 의 SFX AudioMixerGroup 드래그 (설정 슬라이더 연동에 필수)
 /// - Error Sfx / Cup Select Sfx / Lid Select Sfx / Bag Select Sfx: 각 효과음 클립
 ///
 /// 씬마다 하나씩 배치해서 쓰면 됨 (OrderSession처럼 씬 넘어가도 유지될 필요는 없음).
@@ -14,8 +18,12 @@ public class SfxManager : MonoBehaviour
 {
     public static SfxManager Instance;
 
-    [Header("오디오 소스")]
-    [Tooltip("직접 재생하는 용도는 아니고, 여기 설정된 Volume 값만 참고해서 임시 재생기에 적용함")]
+    [Header("Audio Mixer (필수)")]
+    [Tooltip("MainMixer 의 SFX 그룹을 연결. 이게 있어야 설정의 SFX 슬라이더가 이 소리들을 조절함")]
+    public AudioMixerGroup sfxGroup;
+
+    [Header("오디오 소스 (선택)")]
+    [Tooltip("클립별 상대 볼륨이 필요할 때만 사용. 전체 볼륨은 Sfx Group(믹서)이 관리함")]
     public AudioSource audioSource;
 
     [Header("효과음 클립")]
@@ -50,6 +58,7 @@ public class SfxManager : MonoBehaviour
 
         AudioSource tempSource = temp.AddComponent<AudioSource>();
         tempSource.clip = clip;
+        tempSource.outputAudioMixerGroup = sfxGroup; // ★ SFX 그룹으로 라우팅 (슬라이더 연동 핵심)
         tempSource.volume = audioSource != null ? audioSource.volume : 1f;
         tempSource.spatialBlend = 0f; // 2D 사운드
         tempSource.Play();
