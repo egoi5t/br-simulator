@@ -142,7 +142,14 @@ public class GameManager : MonoBehaviour
     {
         if (ToolManager.Instance.HasToolEquipped())
         {
-            Debug.Log("⚠️ 도구를 내려놓은 후 완성할 수 있습니다!");
+            Debug.Log(" 도구를 내려놓은 후 완성할 수 있습니다!");
+            FeedbackManager.Instance.PlayErrorFeedbackAtMouse();
+            return;
+        }
+
+        if (currentFlavorIds.Count == 0)
+        {
+            Debug.Log(" 아이스크림을 하나도 담지 않았습니다!");
             FeedbackManager.Instance.PlayErrorFeedbackAtMouse();
             return;
         }
@@ -152,11 +159,9 @@ public class GameManager : MonoBehaviour
         // 완성 결과를 화면③(포장)으로 넘기기 위해 저장
         CraftResultSession.Instance.SetResult(selectedContainerIndex, currentFlavorIds);
 
-
         Debug.Log("담기 완료 - 포장 화면으로 이동");
 
-        //OrderSession.Instance.CompleteOrder();
-
+        OrderSession.Instance.CompleteOrder();
 
         SceneManager.LoadScene("CupSelectionScene");
     }

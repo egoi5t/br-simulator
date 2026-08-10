@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 08a0c75a7ce0de54989b5e48e86867b4
+guid: 6e183892eb7056b43997c2f5d17fb3be
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8015643933102008273
-    second: disc_FLV-012_Cotton-Candy-Wonderland_0
+      213: 2407525554009103787
+    second: TimerBackground_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -96,30 +96,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WindowsStoreApps
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: disc_FLV-012_Cotton-Candy-Wonderland_0
+      name: TimerBackground_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 19
-        width: 782
-        height: 782
+        x: 112
+        y: 52
+        width: 1136
+        height: 948
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1d76f8e30b94d3f60800000000000000
-      internalID: 8015643933102008273
+      spriteID: bad536a5cbf396120800000000000000
+      internalID: 2407525554009103787
       vertices: []
       indices: 
       edges: []
@@ -138,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      disc_FLV-012_Cotton-Candy-Wonderland_0: 8015643933102008273
+      TimerBackground_0: 2407525554009103787
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
