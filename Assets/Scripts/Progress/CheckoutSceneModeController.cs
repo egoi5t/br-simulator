@@ -69,7 +69,7 @@ public class CheckoutSceneModeController : MonoBehaviour
 
         if (isPackagingPhase)
         {
-            if (nextButtonLabel != null) nextButtonLabel.text = "Checkout";
+            if (nextButtonLabel != null) nextButtonLabel.text = "포장 완료";
 
             if (nextButton != null)
             {
