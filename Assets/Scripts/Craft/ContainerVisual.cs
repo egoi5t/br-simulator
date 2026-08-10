@@ -1,10 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 public class ContainerVisual : MonoBehaviour
 {
     [Header("용기 UI 오브젝트")]
@@ -17,8 +13,9 @@ public class ContainerVisual : MonoBehaviour
     private readonly string[] containerCodeNames =
         { "ikko", "niko", "sanko", "yonko", "goko", "rokko" };
 
-    // 2026-07-25: 새 아트 루트
-    private const string basePath = "Assets/Art/screen2_assets";
+    // 2026-08-10: 빌드에서도 뜨도록 Resources.Load 사용.
+    // 아트는 Assets/Resources/CraftArt/ 아래로 이동됨. 경로는 Resources 기준 상대경로(확장자 없음).
+    private const string basePath = "CraftArt";
     private const string containersFolder = "IceCreamCup";
     private const string scoopFolder = "IceCreamFlvaorTexture/ikko_niko_flavor_overlays";
     private const string discFolder = "IceCreamFlvaorTexture/flavor_discs";
@@ -37,7 +34,7 @@ public class ContainerVisual : MonoBehaviour
 
         // 2026-07-25: 잇코/니코 = "cup", 산코~록코 = "flat"
         string suffix = (containerIndex <= 2) ? "cup" : "flat";
-        string path = $"{basePath}/{containersFolder}/cup_{containerIndex:00}_{code}_{suffix}.png";
+        string path = $"{basePath}/{containersFolder}/cup_{containerIndex:00}_{code}_{suffix}";
 
         Sprite baseSprite = LoadSpriteAtPath(path);
         if (baseSprite == null)
@@ -63,7 +60,7 @@ public class ContainerVisual : MonoBehaviour
         if (currentContainerIndex <= 2)
         {
             // ---- 잇코/니코: 스쿱(볼) 오버레이를 그대로 얹기 ----
-            string path = $"{basePath}/{scoopFolder}/{currentContainerIndex:00}_{code}/pos{slotOrder}_{flavorId}_{flavorName}.png";
+            string path = $"{basePath}/{scoopFolder}/{currentContainerIndex:00}_{code}/pos{slotOrder}_{flavorId}_{flavorName}";
             Sprite overlay = LoadSpriteAtPath(path);
             if (overlay == null) { Debug.LogError("스쿱 오버레이를 못 찾았습니다: " + path); return; }
 
@@ -74,7 +71,7 @@ public class ContainerVisual : MonoBehaviour
         else
         {
             // ---- 산코~록코: flavor_disc 1장을 웨지(1/n)로 잘라 슬롯 위치에 회전 배치 ----
-            string path = $"{basePath}/{discFolder}/disc_{flavorId}_{flavorName}.png";
+            string path = $"{basePath}/{discFolder}/disc_{flavorId}_{flavorName}";
             Sprite disc = LoadSpriteAtPath(path);
             if (disc == null) { Debug.LogError("맛 디스크를 못 찾았습니다: " + path); return; }
 
@@ -112,12 +109,17 @@ public class ContainerVisual : MonoBehaviour
         slot.rectTransform.localEulerAngles = Vector3.zero;
     }
 
+    // 2026-08-10: 빌드 대응 - Resources.Load 로 로드(에디터/빌드 모두 동작).
+    // Single 스프라이트 모드면 바로 잡히고, Multiple(spriteMode 2) 모드면
+    // 그 파일이 품은 하위 스프라이트 중 첫 번째를 사용.
     private Sprite LoadSpriteAtPath(string path)
     {
-#if UNITY_EDITOR
-        return AssetDatabase.LoadAssetAtPath<Sprite>(path);
-#else
+        Sprite sprite = Resources.Load<Sprite>(path);
+        if (sprite != null) return sprite;
+
+        Sprite[] all = Resources.LoadAll<Sprite>(path);
+        if (all != null && all.Length > 0) return all[0];
+
         return null;
-#endif
     }
 }

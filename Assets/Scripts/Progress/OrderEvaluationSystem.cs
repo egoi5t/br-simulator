@@ -32,9 +32,10 @@ public static class OrderEvaluationSystem
     public static Outcome Evaluate()
     {
         var session = OrderSession.Instance;
+        session.LastOrderBossAngered = false; // 이번 주문의 보스 화남 여부 초기화
 
-        // 실시간으로 이미 쌓인 실수(뚜껑 오답, 이른 쇼핑백 클릭, 1차 시간초과 등)부터 시작
-        int complainCount = session.ComplainCounter;
+        // 기획상 평가 요소는 용기/맛/시간 3가지뿐 (실시간 미스는 페널티 없음)
+        int complainCount = session.ComplainCounter; // 미스 미부과라 사실상 0에서 시작
 
         // 1. 메뉴(사이즈) 확인 - 스냅샷 vs 실제로 만든 사이즈(CraftResultSession)
         bool menuCorrect = CheckMenuCorrect();

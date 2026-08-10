@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.Audio;
 
 /// <summary>
 /// 하루 일과가 끝났을 때(오늘 목표 손님 수 도달) 보여주는 정산 화면.
@@ -61,10 +62,28 @@ public class DailySettlementSceneController : MonoBehaviour
     [Tooltip("3 초과면 며칠째든 상관없이 즉시 배드 엔딩(해고)")]
     public int debugBossCounter = 0;
 
+    [Header("사운드")]
+    [Tooltip("정산 화면 진입 시 1회 재생할 효과음 (end_of_the_day_effect_sound 1)")]
+    public AudioClip endOfDaySfx;
+    [Tooltip("효과음을 낼 믹서 그룹 (MainMixer의 SFX). 비워도 소리는 남")]
+    public AudioMixerGroup endOfDaySfxGroup;
+
     private OrderSession.DailySettlementResult result;
 
     private void Start()
     {
+        // 2026-08-10: 정산 화면 진입 -> 게임플레이 BGM 정지 + 하루 종료 효과음 1회 (정산 화면은 무음)
+        GameBGMPlayer.Instance?.StopBgm();
+        if (endOfDaySfx != null)
+        {
+            var sfxGo = new GameObject("EndOfDaySfx");
+            var src = sfxGo.AddComponent<AudioSource>();
+            src.clip = endOfDaySfx;
+            src.outputAudioMixerGroup = endOfDaySfxGroup;
+            src.Play();
+            Destroy(sfxGo, endOfDaySfx.length);
+        }
+
         if (useDebugValues)
         {
             OrderSession.Instance.CurrentDay = debugCurrentDay;
@@ -116,6 +135,8 @@ public class DailySettlementSceneController : MonoBehaviour
         if (OrderSession.Instance.BossCounter > 3)
         {
             Debug.Log($"bossCounter {OrderSession.Instance.BossCounter}(3 초과)로 해고 -> 배드 엔딩");
+            OrderSession.Instance.WasFired = true;   // 해고 엔딩(_ending_fired) 표시용
+            GameBGMPlayer.Instance?.StopBgm();        // 정산 완료 -> 엔딩 진입 시 게임플레이 BGM 정지
             SceneManager.LoadScene(badEndingSceneName);
             return;
         }
@@ -128,6 +149,7 @@ public class DailySettlementSceneController : MonoBehaviour
 
             Debug.Log($"전체 일정 종료! 누적 {OrderSession.Instance.TotalEarnings}원 / " +
                       $"목표 {OrderSession.Instance.TotalGoal}원 -> {(success ? "해피" : "배드")} 엔딩으로 이동");
+            GameBGMPlayer.Instance?.StopBgm(); // 정산 완료 -> 엔딩 진입 시 게임플레이 BGM 정지
             SceneManager.LoadScene(endingScene);
             return;
         }
@@ -135,6 +157,7 @@ public class DailySettlementSceneController : MonoBehaviour
         // 3. 둘 다 아니면 다음 날 시작 (화면①로)
         Debug.Log($"{OrderSession.Instance.CurrentDay}일차 시작 " +
                   $"(오늘 목표: {OrderSession.Instance.GetTodayCustomerTarget()}명) -> 주문 씬으로 이동합니다.");
+        GameBGMPlayer.Instance?.PlayBgm(); // 다음날 진입 -> 게임플레이 BGM 재개
         SceneManager.LoadScene(nextOrderSceneName);
     }
 }

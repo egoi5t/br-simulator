@@ -99,17 +99,35 @@ public class PersistentTimerUI : MonoBehaviour
             timerText.gameObject.SetActive(false);
     }
 
+    private Color _normalColor;
+    private bool _colorCached = false;
+
     private void Update()
     {
         if (timerText == null) return;
         if (timerRoot != null && !timerRoot.activeSelf) return;
         if (timerRoot == null && !timerText.gameObject.activeSelf) return;
 
-        float remaining = OrderSession.Instance.GetRemainingTime();
-        int seconds = Mathf.CeilToInt(remaining);
-        int m = seconds / 60;
-        int s = seconds % 60;
+        if (!_colorCached) { _normalColor = timerText.color; _colorCached = true; }
 
-        timerText.text = $"{m}:{s:00}";
+        var session = OrderSession.Instance;
+        float elapsed = session.GetElapsedTime();
+        float limit = session.OrderTimeLimit;
+
+        int seconds;
+        if (elapsed < limit)
+        {
+            // 제한시간(기본 30초) 카운트다운
+            seconds = Mathf.CeilToInt(limit - elapsed);
+            timerText.color = _normalColor;
+        }
+        else
+        {
+            // 30초 초과: 빨간색으로 1초부터 카운트업 (빨강 0:30 = 60초 컷)
+            seconds = Mathf.Max(1, Mathf.CeilToInt(elapsed - limit));
+            timerText.color = Color.red;
+        }
+
+        timerText.text = $"{seconds / 60}:{seconds % 60:00}";
     }
 }

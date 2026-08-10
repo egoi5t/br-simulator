@@ -1835,6 +1835,8 @@ MonoBehaviour:
   debugCurrentDay: 4
   debugTotalEarnings: 1000000
   debugBossCounter: 0
+  endOfDaySfx: {fileID: 8300000, guid: 43e5bcf7407160541af33776a76c8ad5, type: 3}
+  endOfDaySfxGroup: {fileID: -8276151129787171873, guid: bf5773fe855ef0d4f8dd3fe26f3ca4cb, type: 2}
 --- !u!1 &1847613822
 GameObject:
   m_ObjectHideFlags: 0

@@ -156,7 +156,8 @@ public class CupSelectionSceneController : MonoBehaviour
     {
         if (selectedCup == null)
         {
-            OrderSession.Instance.RegisterComplaint();
+            // 2026-08-10: 실시간 미스(뚜껑/쇼핑백/컵선택 시간초과)는 기획상 평가 요소 아님 → complain 미부과
+            // OrderSession.Instance.RegisterComplaint();
             if (WarningPopupEffect.Instance != null)
                 WarningPopupEffect.Instance.PlayWarningAtMouse("시간이 초과됐어요!");
             Debug.Log("시간 초과: 용기 선택 실패 -> complainCounter++");

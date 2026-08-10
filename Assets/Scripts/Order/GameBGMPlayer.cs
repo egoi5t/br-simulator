@@ -12,6 +12,8 @@ using UnityEngine.Audio;
 public class GameBGMPlayer : MonoBehaviour
 {
     private static GameBGMPlayer _instance;
+    public static GameBGMPlayer Instance => _instance;
+    private AudioSource audioSource;
 
     [Header("Audio Mixer 연결")]
     public AudioMixerGroup bgmGroup; // MainMixer의 BGM 그룹 드래그
@@ -24,6 +26,9 @@ public class GameBGMPlayer : MonoBehaviour
         // 이미 재생 중인 인스턴스가 있으면(씬을 나갔다 돌아온 경우) 이 중복 오브젝트는 그냥 파괴
         if (_instance != null)
         {
+            // 2026-08-10: if BGM was stopped at an ending, resume it when re-entering OrderScene (new game)
+            if (_instance.audioSource != null && !_instance.audioSource.isPlaying)
+                _instance.audioSource.Play();
             Destroy(gameObject);
             return;
         }
@@ -31,11 +36,23 @@ public class GameBGMPlayer : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
 
-        var audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.clip = bgmClip;
         audioSource.outputAudioMixerGroup = bgmGroup;
         audioSource.loop = true;
         audioSource.playOnAwake = false;
         audioSource.Play();
+    }
+
+    // 2026-08-10: stop gameplay BGM when daily settlement completes (entering ending)
+    public void StopBgm()
+    {
+        if (audioSource != null) audioSource.Stop();
+    }
+
+    // 2026-08-10: resume gameplay BGM (used by 'next day' button after settlement)
+    public void PlayBgm()
+    {
+        if (audioSource != null && !audioSource.isPlaying) audioSource.Play();
     }
 }

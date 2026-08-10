@@ -123,6 +123,12 @@ public class OrderSession : MonoBehaviour
     /// <summary>게임 전체 누적 카운터. 해고/게임오버 트리거로 쓰일 예정.</summary>
     public int BossCounter { get; set; } = 0;
 
+    /// <summary>bossCounter 초과로 '해고'되어 게임오버된 경우 true. 배드 엔딩에서 _ending_fired 표시 판정에 사용.</summary>
+    public bool WasFired { get; set; } = false;
+
+    /// <summary>이번 주문에서 bossCounter가 올랐는지(보스 잔소리 표시용). 주문마다 초기화.</summary>
+    public bool LastOrderBossAngered { get; set; } = false;
+
     // ── 일일 정산용 ──
 
     /// <summary>오늘 하루 중 complainCounter가 한 번이라도 늘었는지 (급여 삭감 판정용).</summary>
@@ -161,8 +167,12 @@ public class OrderSession : MonoBehaviour
     /// </summary>
     public void RegisterBossAnger()
     {
+        // 2026-08-10: 한 주문당 bossCounter 증가는 최대 1회로 캡 (이번 주문에서 이미 올랐으면 스킵)
+        if (LastOrderBossAngered) return;
+
         BossCounter++;
         DailyBossOccurred = true;
+        LastOrderBossAngered = true;
 
         if (BossCounter > 3)
         {

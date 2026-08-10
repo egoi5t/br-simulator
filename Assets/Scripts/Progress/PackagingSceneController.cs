@@ -162,7 +162,8 @@ public class PackagingSceneController : MonoBehaviour
 
         if (chosenSize != correctSize)
         {
-            OrderSession.Instance.RegisterComplaint();
+            // 2026-08-10: 실시간 미스(뚜껑/쇼핑백/컵선택 시간초과)는 기획상 평가 요소 아님 → complain 미부과
+            // OrderSession.Instance.RegisterComplaint();
             if (WarningPopupEffect.Instance != null)
                 WarningPopupEffect.Instance.PlayWarningAtMouse("사이즈가 안 맞아요!");
             Debug.LogWarning($"잘못된 뚜껑을 선택했습니다. (정답: {correctSize}, 선택: {chosenSize}) -> complainCounter++");
@@ -267,7 +268,8 @@ public class PackagingSceneController : MonoBehaviour
 
         if (!IsReadyForBag)
         {
-            OrderSession.Instance.RegisterComplaint();
+            // 2026-08-10: 실시간 미스(뚜껑/쇼핑백/컵선택 시간초과)는 기획상 평가 요소 아님 → complain 미부과
+            // OrderSession.Instance.RegisterComplaint();
             if (WarningPopupEffect.Instance != null)
                 WarningPopupEffect.Instance.PlayWarningAtMouse("뚜껑을 먼저 덮어주세요!");
             Debug.LogWarning("뚜껑이 덮이지 않아 쇼핑백에 넣을 수 없습니다. -> complainCounter++");
@@ -314,14 +316,9 @@ public class PackagingSceneController : MonoBehaviour
 
         IsPackagingComplete = true;
 
-        OrderEvaluationSystem.Outcome outcome = OrderEvaluationSystem.Evaluate();
-        OrderSession.Instance.LastOrderOutcome = outcome;
-        Debug.Log($"포장 완료! 주문 처리 결과: {outcome} -> '체크아웃' 버튼을 누르면 다음으로 넘어갑니다.");
-        // 일일 정산 트리거는 여기서 하지 않음. 화면①에서 손님에게 전달까지 끝난 뒤,
-        // OrderSession.IsTodayComplete()를 체크해서 DailySettlementScene으로 넘어가는 방식.
-
-        // 다음 손님 주문 때 이 씬이 다시 "1차(용기 선택) 모드"로 진입하도록 초기화
-        CraftResultSession.Instance.SetResult(0, new List<string>());
+        // 2026-08-10 기획 반영: 평가(소요시간 포함)는 여기(쇼핑백 담는 순간)가 아니라
+        // '포장 완료' 버튼을 누른 시점(GoToNextScene)에서 수행한다.
+        Debug.Log("쇼핑백에 담김 -> '포장 완료' 버튼을 누르면 평가 후 다음으로 넘어갑니다.");
     }
 
     /// <summary>
@@ -337,6 +334,12 @@ public class PackagingSceneController : MonoBehaviour
             Debug.LogWarning("아직 포장이 끝나지 않았습니다. 쇼핑백을 먼저 클릭해서 포장을 완료하세요.");
             return;
         }
+
+        // 2026-08-10: '포장 완료' 버튼을 누른 이 시점의 소요시간으로 평가
+        OrderEvaluationSystem.Outcome outcome = OrderEvaluationSystem.Evaluate();
+        OrderSession.Instance.LastOrderOutcome = outcome;
+        Debug.Log($"포장 완료 버튼 -> 주문 처리 결과: {outcome}");
+        CraftResultSession.Instance.SetResult(0, new List<string>());
 
         if (skipSceneTransitionForTest)
         {
